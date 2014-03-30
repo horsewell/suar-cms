@@ -1,0 +1,1 @@
+<h3 style="color:#aaa;font-style:italic;"><span style="color:#FFD700;"><span style="background-color:#FF8C00;">some text this is some more text even more text he</span><del><samp><span style="background-color:#FF8C00;">re is some more e</span></samp></del><span style="background-color:#FF8C00;">ven</span></span></h3>
