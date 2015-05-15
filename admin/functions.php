@@ -121,6 +121,11 @@ function tokens_load($file = 'tokens.json') {
  **/
 
 function tokens_save($file = 'tokens.json', $tokens = array()) {
+	foreach($tokens as $key => $value ) {
+		if ( strrpos($key, "this-") === 0 ) {
+			unset($tokens[$key]);
+		}
+	}
 	txt_update($file, json_encode($tokens));
 }
 
@@ -134,7 +139,7 @@ function tokens_save($file = 'tokens.json', $tokens = array()) {
  *  Display variable form
  **/
 
-function display_form($tokens) {
+function display_form($post_values, $tokens) {
 	global $self;
 	$form  ="";
 	$form .= "<form action=\"{$self}\" method=\"post\">\n";
@@ -144,13 +149,13 @@ function display_form($tokens) {
 	ksort($tokens);
 	foreach($tokens as $key => $value) {
 		$form .="<tr><td>[$key]</td><td>";
-		if ( strrpos($key, "this-") === FALSE ) {
+		if ( strrpos($key, "this-") !== 0 ) {
 			$form .="<input type=\"Text\" size=\"20\" name=\"token_{$key}\" value=\"{$value}\">";
 		} else {
 			$form .= " {$value} ";
 		}
 		$form .= "</td><td>";
-		if ( strrpos($key, "this-") === FALSE ) {
+		if ( strrpos($key, "this-") !== 0 ) {
 			$form .="<input type=\"checkbox\" name=\"delete_{$key}\" value=\"$key\">";
 		} else {
 			$form .= "&nbsp;";
