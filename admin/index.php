@@ -78,7 +78,7 @@ if($_POST["select"] && $action=="Load") {
     <form id="form-content" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
 		<h2>Currently editing: <?php echo !empty($file) ? $file : 'None - Please select a file to edit.';  ?></h2>
 		<textarea name="textfield" cols="60" rows="20" class="ckeditor"><?php echo $text ?></textarea>
-		<p class="buttons">Backup: <?php if (!is_writable($BPATH) || empty($file)): echo "unavailable"; else: ?><input name="Submit" type="submit" id="backup" value="Backup" /> <input name="Submit" type="submit" id="restore" value="Restore" /><?php endif; ?> | Live: <input name="Submit" type="submit" id="update" value="Update" <?php if (empty($file)) { echo 'disabled="disabled"'; } ?> /></p>
+		<p class="buttons"><a href="tokens.php">Tokens</a> | Backup: <?php if (!is_writable($BPATH) || empty($file)): echo "unavailable"; else: ?><input name="Submit" type="submit" id="backup" value="Backup" /> <input name="Submit" type="submit" id="restore" value="Restore" /><?php endif; ?> | Live: <input name="Submit" type="submit" id="update" value="Update" <?php if (empty($file)) { echo 'disabled="disabled"'; } ?> /></p>
 		<input name="select" type="hidden" value="<?php echo $file; ?>" />
     </form>
 	</div>
