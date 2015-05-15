@@ -4,8 +4,8 @@ $pass = new PasswdAuth(realpath(getcwd()));
 $pass->check();
 
 $self = $_SERVER['PHP_SELF'];
-$user = $HTTP_GET_VARS['user'];
-$pwd  = $HTTP_GET_VARS['password'];
+$user = $_GET['user'];
+$pwd  = $_GET['password'];
 
 function editForm($user) {
     global $self;
@@ -80,8 +80,8 @@ function back_to_admin () {
 	</header>
 <section><div class="main"><?php
 
-if(empty($HTTP_GET_VARS['cancel']) && isset($HTTP_GET_VARS['action'])) {
-    switch($HTTP_GET_VARS['action']) {
+if(empty($_GET['cancel']) && isset($_GET['action'])) {
+    switch($_GET['action']) {
     
         case 'change':
             echo editForm($user);
@@ -126,6 +126,8 @@ if(empty($HTTP_GET_VARS['cancel']) && isset($HTTP_GET_VARS['action'])) {
 } else {
     echo users();
 }
+
+// phpinfo();
 
 ?></div></section>
 	<nav><p><a href="./">≪ back to the content administration</a></p></nav>

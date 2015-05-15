@@ -68,7 +68,7 @@ class PasswdAuth {
         Returns true if the given user is found in the passwd file. False otherwise.
     */
     function checkUser($user) {
-        $lines = &$this->_getUsersArray();
+        $lines = $this->_getUsersArray();
         foreach($lines as $line) {
             if($this->_retrieveUsername($line) == $user) {
                 return true;
@@ -83,7 +83,7 @@ class PasswdAuth {
         is returned.
     */
     function deleteUser($user) {
-        $lines = &$this->_getUsersArray();
+        $lines = $this->_getUsersArray();
         $usersArr = array();
         $result = false;
         foreach($lines as $line) {
@@ -104,7 +104,7 @@ class PasswdAuth {
     */
     function addUser($user, $password) {
         if( !empty($user) && !$this->checkUser($user)) {
-            $usersArr = &$this->_getUsersArray();
+            $usersArr = $this->_getUsersArray();
             $usersArr[] = $user.$this->deliminator.crypt($password);
             $this->_saveUsersArray($usersArr);    
             return true;
@@ -119,7 +119,7 @@ class PasswdAuth {
     */
     function changePassword($user, $newPassword) {
     	if ( empty($newPassword) ) { return false; }
-        $lines = &$this->_getUsersArray();
+        $lines = $this->_getUsersArray();
         $usersArr = array();
         $changed = false;
         foreach($lines as $line) {
