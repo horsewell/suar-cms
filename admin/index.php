@@ -35,19 +35,19 @@ if($_POST["select"] && $action=="Load") {
     <title>Website Content Administration Area</title>
 	
 	<link rel="stylesheet" type="text/css" href="style.css?t=E0LB">
-	<link rel="stylesheet" type="text/css" href="ckeditor/skins/moono/editor.css?t=E0LB">
-	<link rel="stylesheet" type="text/css" href="ckeditor/plugins/uicolor/yui/assets/yui.css?t=E0LB">
+	<link rel="stylesheet" type="text/css" href="../libraries/ckeditor/skins/moono/editor.css?t=E0LB">
+	<link rel="stylesheet" type="text/css" href="../libraries/ckeditor/plugins/uicolor/yui/assets/yui.css?t=E0LB">
 	
-	<script type="text/javascript" src="ckeditor/ckeditor.js"></script><style>.cke{visibility:hidden;}</style>
+	<script type="text/javascript" src="../libraries/ckeditor/ckeditor.js"></script><style>.cke{visibility:hidden;}</style>
 	
 	<script src="js/domready.js" type="application/javascript"></script>
 	<script src="js/script.js" type="application/javascript"></script>
 	<!-- created a custom file outside the ckeditor folder so when upgrading ckeditor will not lose config (but may have to update it) -->
 	<script src="js/ckeditor_config.js?t=E0LB" type="text/javascript"></script>
 	
-	<script type="text/javascript" src="ckeditor/lang/en.js?t=E0LB"></script>
-	<script type="text/javascript" src="ckeditor/styles.js?t=E0LB"></script>
-	<script type="text/javascript" src="ckeditor/plugins/uicolor/yui/yui.js?t=E0LB"></script>
+	<script type="text/javascript" src="../libraries/ckeditor/lang/en.js?t=E0LB"></script>
+	<script type="text/javascript" src="../libraries/ckeditor/styles.js?t=E0LB"></script>
+	<script type="text/javascript" src="../libraries/ckeditor/plugins/uicolor/yui/yui.js?t=E0LB"></script>
 </head>
 
 <body class="page-main-admin">
