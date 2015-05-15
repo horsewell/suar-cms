@@ -4,9 +4,6 @@ include('class.PasswdAuth.inc');
 $auth = new PasswdAuth(realpath(getcwd()));
 $auth->check(); // $auth->check('admin'); // <-- only for the admin user
 
-$CPATH="../content/";
-$BPATH="../backup/";
-
 $text   = $_POST["textfield"];
 $file   = $_POST["select"];
 //$file   = $_POST["editing"];

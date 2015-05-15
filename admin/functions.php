@@ -4,6 +4,9 @@
  *  Basic functionality  
  */
 
+$CPATH="../content/";
+$BPATH="../backup/";
+
 /**
  *  Get the list of files  
  */
@@ -95,12 +98,77 @@ function clean_html($html, $allowable_tags = '') {
 }
 
 
+
+
 /**
- *  
+ *  load token variables
  */
 
+function tokens_load($file = 'tokens.json') {
+	$json   = txt_load($file);
+	$tokens = json_decode($json, TRUE);
+	
+	$tokens['this-year'] = date('Y');
+	$tokens['this-month'] = date('n');
+	$tokens['this-day'] = date('j'); 
+	// $tokens['current-user'] = $GLOBALS[''];
+
+	return $tokens;
+}
+
+/**
+ *  save token variables.
+ **/
+
+function tokens_save($file = 'tokens.json', $tokens = array()) {
+	txt_update($file, json_encode($tokens));
+}
+
+/**
+ *  parse JSON
+ **/
 
 
 
+/**
+ *  Display variable form
+ **/
 
+function display_form($tokens) {
+	global $self;
+	$form  ="";
+	$form .= "<form action=\"{$self}\" method=\"post\">\n";
+
+	$form .= "<table>";
+	
+	ksort($tokens);
+	foreach($tokens as $key => $value) {
+		$form .="<tr><td>[$key]</td><td>";
+		if ( strrpos($key, "this-") === FALSE ) {
+			$form .="<input type=\"Text\" size=\"20\" name=\"token_{$key}\" value=\"{$value}\">";
+		} else {
+			$form .= " {$value} ";
+		}
+		$form .= "</td><td>";
+		if ( strrpos($key, "this-") === FALSE ) {
+			$form .="<input type=\"checkbox\" name=\"delete_{$key}\" value=\"$key\">";
+		} else {
+			$form .= "&nbsp;";
+		}
+		$form .= "</td></tr>";
+  }
+  
+  $form .="<tr>";
+	$form .="<td><input type=\"Text\" size=\"20\" name=\"new-token-name\"></td>";
+	$form .="<td><input type=\"Text\" size=\"20\" name=\"new-token-value\"></td>";
+	$form .="<td>&nbsp;</td>";
+	$form .="</tr>";
+
+  $form .= "</table>";
+
+  $form .= "<input type=\"Hidden\" name=\"action\" value=\"doAction\">";
+  $form .= "<input type=\"Submit\" name=\"submit\" value=\"Save\">";
+	$form .= "</form>";
+	return $form;
+}
 

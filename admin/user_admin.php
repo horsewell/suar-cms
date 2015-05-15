@@ -23,7 +23,7 @@ END;
 
 function addForm() {
     global $self;
-    $form = <<< END
+		$form = <<< END
 <form action="$self" method="get">
     Please enter a new user and password:<br>
     User: <input type="Text" size="20" name="user"><br>
