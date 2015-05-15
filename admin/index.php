@@ -57,10 +57,10 @@ if($_POST["select"] && $action=="Load") {
 <form id="form-file" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>"> 
 	<select name="select" class="select-file">
 		<option value="">- Select a File Here -</option>
-		<?php foreach ($FL as $key) {?>
+		<?php foreach ($FL as $key) { if ($TOKEN_FILE !== $key) { ?>
 		<option value="<?php echo $key ?>" <?php if ($_POST["select"]==$key) {echo "selected";} ?>>
 			<?php if (!is_writable($CPATH.$key)) {echo "*";} ?><?php echo $key ?></option>
-		<?php } ?>
+		<?php } } ?>
 	</select> <input type="submit" name="Submit" value="Load" /> |
 </form>						
 					</li>

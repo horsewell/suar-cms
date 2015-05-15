@@ -6,6 +6,7 @@
 
 $CPATH="../content/";
 $BPATH="../backup/";
+$TOKEN_FILE = 'tokens.json';
 
 /**
  *  Get the list of files  

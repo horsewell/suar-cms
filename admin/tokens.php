@@ -7,7 +7,7 @@ $self = $_SERVER['PHP_SELF'];
 
 include('functions.php');
 
-$tokens = tokens_load('tokens.json');
+$tokens = tokens_load($TOKEN_FILE);
 
 // remove
 if ( $_POST['action'] === "doAction" ) {
@@ -31,7 +31,7 @@ if ( $_POST['action'] === "doAction" ) {
 			}
 			// TODO: if the token name has "this-" at the start then display a message
 		}
-		tokens_save('tokens.json', $tokens);
+		tokens_save($TOKEN_FILE, $tokens);
 	}
 }
 
