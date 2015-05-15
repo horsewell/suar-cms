@@ -1,4 +1,14 @@
-<!DOCTYPE html>   
+<?php
+
+// preload the page
+// parse the tokens and stubstitue
+// filter the page for bad things
+// display the page
+
+// this will get ready for meta-data changes
+// also allow this page to access the tokens
+
+?><!DOCTYPE html>   
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
 <!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
 <!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
