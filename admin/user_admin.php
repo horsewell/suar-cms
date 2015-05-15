@@ -37,7 +37,7 @@ END;
 
 function users() {
     global $pass, $self;
-    $users   = &$pass->getUsers();
+    $users   = $pass->getUsers();
     $string  = "<p><a href=\"$self?action=add\">Add a new user</a><p>";
     $string .= '<table class="list-users"><thead><tr><td>Username</td><td></td><td></td></tr></thead>';
     $i = 1;

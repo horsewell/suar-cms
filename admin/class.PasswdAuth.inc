@@ -31,7 +31,7 @@ class PasswdAuth {
         $this->auth = false;
         if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
             
-            $lines = &$this->_getUsersArray();
+            $lines = $this->_getUsersArray();
             
             foreach($lines as $line) {
                 list($username, $password) = explode($this->deliminator, $line);
@@ -137,7 +137,7 @@ class PasswdAuth {
     }
     
     function getUsers() {
-        $lines = &$this->_getUsersArray();
+        $lines = $this->_getUsersArray();
         $users = array();
         foreach($lines as $line) {
             $users[] = $this->_retrieveUsername($line);

@@ -11,7 +11,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.bodyClass = 'main-content txt-f50';
 	config.height = '425px';
 	config.bodyId = 'main-content';
-	config.contentsCss = ['../css/reset.css', '../css/style.css'];
+	config.contentsCss = ['../admin/css/reset.css', '../admin/css/style.css'];
 	config.toolbar_Default = [
 		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source' ] },
 		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
