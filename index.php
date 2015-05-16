@@ -13,13 +13,33 @@
 	<meta name="keywords" content="" />
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
-</head>
-<!-- !Body -->
+</head><!-- !Body -->
 <body>
 	<div id="container">
-		
+<?php
+
+require_once 'admin/functions.php';
+
+/**
+ *  Filter the text page
+ **/
+
+function token_filter($page) {
+	global $tokens, $CPATH, $TOKEN_FILE;
+	// make sure the $tokens are loaded
+	if ( !(isset($tokens) && count($tokens) > 0) ) {
+		$tokens = tokens_load($CPATH.$TOKEN_FILE);
+		$page .= '<div style="background-color: gray;"><pre>$tokens = '. print_r($tokens, TRUE) .'</pre></div>';
+	}
+	// pass the page for "[token-text]" style items using regex
+	// replace all occurances of each
+	// return the text
+	return $page;
+}
+
+?>		
 		<section id="main">
-<? include('content/home.txt'); ?>
+<?php echo token_filter(file_get_contents($CPATH.'home.txt')); ?>
 		</section><!-- /main -->
 		
 		<footer>

@@ -4,9 +4,10 @@
  *  Basic functionality  
  */
 
-$CPATH="../content/";
-$BPATH="../backup/";
+$CPATH="content/";
+$BPATH="backup/";
 $TOKEN_FILE = 'tokens.json';
+$tokens = array();
 
 /**
  *  Get the list of files  
@@ -42,8 +43,7 @@ function file_list($dir) {
  */
 
 function txt_load($file) {
-	global $CPATH;
-	return file_get_contents($CPATH.$file);
+	return file_get_contents($file);
 }
 
 /**
@@ -51,9 +51,8 @@ function txt_load($file) {
  */
 
 function txt_update($file, $string) {
-	global $CPATH;
 	if (get_magic_quotes_gpc()) { $string = stripslashes($string); }
-	$fp = fopen($CPATH.$file, "w");
+	$fp = fopen($file, "w");
 	fwrite($fp, $string);
 	fclose($fp);
 }
@@ -63,8 +62,7 @@ function txt_update($file, $string) {
  */
 
 function txt_backup($file, $string) {
-	global $BPATH;
-	$fp = fopen($BPATH.$file, "w");
+	$fp = fopen($file, "w");
 	fwrite($fp, $string);
 	fclose($fp);
 }
@@ -74,8 +72,7 @@ function txt_backup($file, $string) {
  */
 
 function txt_restore($file, $string) {
-	global $BPATH;
-	return file_get_contents($BPATH.$file);
+	return file_get_contents($file);
 }
 
 /**

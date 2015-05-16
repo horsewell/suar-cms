@@ -1,6 +1,6 @@
 <?php 
 
-include('class.PasswdAuth.inc');
+include('../libraries/class.PasswdAuth.inc');
 $auth = new PasswdAuth(realpath(getcwd()));
 $auth->check(); // $auth->check('admin'); // <-- only for the admin user
 
@@ -11,17 +11,20 @@ $action = $_POST["Submit"];
 
 include('functions.php');
 
+$CPATH = '../'.$CPATH;
+$BPATH = '../'.$BPATH;
+
 $FL=file_list($CPATH);
 
 if($_POST["select"] && $action=="Load") {
-	$text=txt_load($_POST["select"]);
+	$text=txt_load($CPATH.$_POST["select"]);
 } else if ($file) {
 	if ($action=="Restore") {
-		$text = txt_restore($file, $text);
+		$text = txt_restore($BPATH.$file, $text);
 	} else if($text && $action=="Update") {
-		txt_update($file, $text);
+		txt_update($CPATH.$file, $text);
 	} else if($text && $action=="Backup") {
-		txt_backup($file, $text);
+		txt_backup($BPATH.$file, $text);
 	}
 }
 
