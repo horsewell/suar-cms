@@ -38,7 +38,7 @@ DirectoryIndex index.php
   ExpiresActive On
 
   # Cache all files for 2 weeks after access (A).
-  ExpiresDefault A1209600
+  # ExpiresDefault A1209600
 
   <FilesMatch \.php$>
     # Do not allow PHP scripts to be cached unless they explicitly send cache
@@ -64,7 +64,7 @@ DirectoryIndex index.php
   RewriteCond %{HTTP_HOST} suarstudios\.com$ [NC]
   RewriteRule ^(.*)$ http%{ENV:protossl}://suarstudios.com%{REQUEST_URI} [L,R]
 
-  # Rewrite URLs of the form 'x' to the form 'index.php?q=x'.
+  # Rewrite URLs of the form 'x' to the form 'index.php?page=x'.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} !=/favicon.ico
