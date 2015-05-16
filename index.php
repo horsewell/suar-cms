@@ -1,10 +1,33 @@
 <?php
 
-include('admin/functions.php');
+/*
+TODO:
+
+We need to add some code to be able to add meta tags.
+We also need to have some cutom items.
+
+- One file for the HTML and another for the meta-data: page.html, page.meta.json
+
+Base metadata
+- title [meta:title]
+- inpage title [meta:title-inpage]
+- template? if we create template files name the template in the meta-data (select from dropdown)
+- description [meta:description]
+- author [meta:author]
+- keywords
+- other meta-data
+- would be good to be able to have plugins here where people can add additional meta-data	
+- which menu? have a plugin for menu system
+	
+ */
+
+
+include('site-admin/functions.php');
 
 $page_file = array_key_exists('page', $_GET) ? $_GET['page'] : 'home';
 
 $page_content = txt_load($CPATH.$page_file .'.txt');
+// TODO: load meta-data as well
 $page_content = token_filter($page_content);
 
 // filter the page for bad things
@@ -24,6 +47,7 @@ $page_content = token_filter($page_content);
 	<meta charset="utf-8">
 	<!--[if IE]><![endif]-->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<!-- TODO: display meta-data info -->
 	<title></title>
 	<meta name="description" content="">
 	<meta name="keywords" content="" />

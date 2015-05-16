@@ -4,8 +4,8 @@
  *  Basic functionality  
  */
 
-$CPATH="content/";
-$BPATH="backup/";
+$CPATH="_content/";
+$BPATH="_content/backup/";
 $TOKEN_FILE = 'tokens.json';
 $tokens = array();
 
@@ -196,4 +196,24 @@ function display_form($post_values, $tokens) {
 	$form .= "</form>";
 	return $form;
 }
+
+
+/**
+ *  functions for meta-data forms
+ **/
+
+function create_metadata_form() {
+	
+}
+
+
+
+
+
+
+
+
+
+
+
 
