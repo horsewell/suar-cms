@@ -21,7 +21,7 @@ Base metadata
 	
  */
 
-
+include('site-admin/config.php');
 include('site-admin/functions.php');
 
 $page_file = array_key_exists('page', $_GET) ? $_GET['page'] : 'home';

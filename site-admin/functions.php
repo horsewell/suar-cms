@@ -3,12 +3,7 @@
 /**
  *  Basic functionality  
  */
-
-$CPATH="_content/";
-$BPATH="_content/backup/";
-$TOKEN_FILE = 'tokens.json';
-$tokens = array();
-
+ 
 /**
  *  Get the list of files  
  */
@@ -103,7 +98,7 @@ function token_filter($page_content) {
 	global $tokens, $CPATH, $TOKEN_FILE;
 	// make sure the $tokens are loaded
 	if ( !(isset($tokens) && count($tokens) > 0) ) {
-		$tokens = tokens_load($CPATH.$TOKEN_FILE);
+		$tokens = token_load($CPATH.$TOKEN_FILE);
 	}
 	
 	preg_match_all('/\[[a-zA-z0-9\-]+\]/', $page_content, $matches);
@@ -124,7 +119,7 @@ function token_filter($page_content) {
  *  load token variables
  */
 
-function tokens_load($file = 'tokens.json') {
+function token_load($file = 'tokens.json') {
 	$json   = txt_load($file);
 	$tokens = json_decode($json, TRUE);
 	
@@ -140,7 +135,7 @@ function tokens_load($file = 'tokens.json') {
  *  save token variables.
  **/
 
-function tokens_save($file = 'tokens.json', $tokens = array()) {
+function token_save($file = 'tokens.json', $tokens = array()) {
 	foreach($tokens as $key => $value ) {
 		if ( strrpos($key, "this-") === 0 ) {
 			unset($tokens[$key]);
@@ -159,24 +154,21 @@ function tokens_save($file = 'tokens.json', $tokens = array()) {
  *  Display variable form
  **/
 
-function display_form($post_values, $tokens) {
-	global $self;
-	$form  ="";
-	$form .= "<form action=\"{$self}\" method=\"post\">\n";
+function token_display_form($post_values, $tokens) {
 
-	$form .= "<table>";
+	$form = '<table>';
 	
 	ksort($tokens);
 	foreach($tokens as $key => $value) {
 		$form .="<tr><td>[$key]</td><td>";
 		if ( strrpos($key, "this-") !== 0 ) {
-			$form .="<input type=\"Text\" size=\"20\" name=\"token_{$key}\" value=\"{$value}\">";
+			$form .= form_input('token_'.$key, 'Text', $value, array('size' => 20,));
 		} else {
 			$form .= " {$value} ";
 		}
 		$form .= "</td><td>";
 		if ( strrpos($key, "this-") !== 0 ) {
-			$form .="<input type=\"checkbox\" name=\"delete_{$key}\" value=\"$key\">";
+			$form .= form_input('delete_'.$key, 'checkbox', $key);
 		} else {
 			$form .= "&nbsp;";
 		}
@@ -184,17 +176,17 @@ function display_form($post_values, $tokens) {
   }
   
   $form .="<tr>";
-	$form .="<td><input type=\"Text\" size=\"20\" name=\"new-token-name\"></td>";
-	$form .="<td><input type=\"Text\" size=\"20\" name=\"new-token-value\"></td>";
+	$form .="<td>".form_input('new-token-name', 'Text', '', array('size' => 20,))."</td>";
+	$form .="<td>".form_input('new-token-value', 'Text', '', array('size' => 20,))."</td>";
 	$form .="<td>&nbsp;</td>";
 	$form .="</tr>";
 
-  $form .= "</table>";
+  $form .= '</table>';
 
-  $form .= "<input type=\"Hidden\" name=\"action\" value=\"doAction\">";
-  $form .= "<input type=\"Submit\" name=\"submit\" value=\"Save\">";
-	$form .= "</form>";
-	return $form;
+  $form .= form_input('action', 'Hidden', 'doAction');
+  $form .= form_input('submit', 'Submit', 'Save');
+  
+	return form_form('token-form', $_SERVER['PHP_SELF'], $form);
 }
 
 
@@ -206,10 +198,27 @@ function create_metadata_form() {
 	
 }
 
+/**
+ *  functions forms
+ **/
 
+function form_form($id, $action, $content, $method = 'post', $options = array()) {
+	$tag = '';
+	foreach( $options as $name => $value) {
+		$tag .= ' '. $name .'="'. $value .'"';
+	}
+	$form .= "<form action=\"$action\" method=\"$method\"{$tag}>\n";
+	$form .= $content;
+	return $form .'</form>';
+}
 
-
-
+function form_input($id, $type, $value, $options = array()) {
+	$tag = empty($value) ? '' : " value=\"{$value}\"";
+	foreach( $options as $name => $value) {
+		$tag .= ' '. $name .'="'. $value .'"';
+	}
+	return "<input id=\"{$id}\" name=\"{$id}\" type=\"{$type}\"{$tag} />";
+}
 
 
 

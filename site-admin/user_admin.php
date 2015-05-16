@@ -1,5 +1,7 @@
 <?php
+
 include('../_libraries/class.PasswdAuth.inc');
+
 $pass = new PasswdAuth(realpath(getcwd()));
 $pass->check();
 
