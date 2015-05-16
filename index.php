@@ -16,38 +16,7 @@
 </head><!-- !Body -->
 <body>
 	<div id="container">
-<?php
-
-require_once 'admin/functions.php';
-
-/**
- *  Filter the text page
- **/
-
-function token_filter($page_content) {
-	global $tokens, $CPATH, $TOKEN_FILE;
-	// make sure the $tokens are loaded
-	if ( !(isset($tokens) && count($tokens) > 0) ) {
-		$tokens = tokens_load($CPATH.$TOKEN_FILE);
-	}
-	
-	preg_match_all('/\[[a-zA-z0-9\-]+\]/', $page_content, $matches);
-	$matches = array_unique($matches)[0];
-	
-	foreach($matches as $value) {
-		$match = trim($value, "[]");
-		$page_content = str_replace('['.$match.']', $tokens[$match], $page_content);
-	}
-	
-	//$page_content .= '<div style="background-color: yellow;"><pre>found tokens = '. print_r($matches, TRUE) .'</pre></div>';
-	//$page_content .= '<div style="background-color: gray;"><pre>$tokens = '. print_r($tokens, TRUE) .'</pre></div>';
-	
-	// pass the page for "[token-text]" style items using regex
-	// replace all occurances of each
-	return $page_content;
-}
-
-?>		
+<?php require_once 'admin/functions.php'; ?>		
 		<section id="main">
 <?php echo token_filter(file_get_contents($CPATH.'home.txt')); ?>
 		</section><!-- /main -->

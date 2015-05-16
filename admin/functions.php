@@ -95,8 +95,30 @@ function clean_html($html, $allowable_tags = '') {
 	return $html;
 }
 
+/**
+ *  Filter the text page
+ **/
 
-
+function token_filter($page_content) {
+	global $tokens, $CPATH, $TOKEN_FILE;
+	// make sure the $tokens are loaded
+	if ( !(isset($tokens) && count($tokens) > 0) ) {
+		$tokens = tokens_load($CPATH.$TOKEN_FILE);
+	}
+	
+	preg_match_all('/\[[a-zA-z0-9\-]+\]/', $page_content, $matches);
+	$matches = array_unique($matches)[0];
+	
+	foreach($matches as $value) {
+		$match = trim($value, "[]");
+		$page_content = str_replace('['.$match.']', $tokens[$match], $page_content);
+	}
+	
+	//$page_content .= '<div style="background-color: yellow;"><pre>found tokens = '. print_r($matches, TRUE) .'</pre></div>';
+	//$page_content .= '<div style="background-color: gray;"><pre>$tokens = '. print_r($tokens, TRUE) .'</pre></div>';
+	
+	return $page_content;
+}
 
 /**
  *  load token variables
