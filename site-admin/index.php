@@ -8,7 +8,7 @@ $auth->check(); // $auth->check('admin'); // <-- only for the admin user
 $text   = $_POST["textfield"];
 $file   = $_POST["select"];
 //$file   = $_POST["editing"];
-$action = $_POST["Submit"];
+$action = $_POST["submit"];
 
 include('config.php');
 include('functions.php');
@@ -16,10 +16,8 @@ include('functions.php');
 $CPATH = '../'.$CPATH;
 $BPATH = '../'.$BPATH;
 
-$FL=file_list($CPATH);
-
 if($_POST["select"] && $action=="Load") {
-	$text=txt_load($CPATH.$_POST["select"]);
+	$text = txt_load($CPATH.$_POST["select"]);
 	// TODO: load meta-data as well
 } else if ($file) {
 	if ($action=="Restore") {
@@ -60,17 +58,20 @@ if($_POST["select"] && $action=="Load") {
 		<h1>Website Administration</h1>
 			<nav>
 				<ul id="nav-main">
-					<li>Select a file to edit:
-<form id="form-file" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>"> 
-	<select name="select" class="select-file">
-		<option value="">- Select a File Here -</option>
-		<?php foreach ($FL as $key) { if ($key[0] !== '_') { ?>
-		<option value="<?php echo $key ?>" <?php if ($_POST["select"]==$key) {echo "selected";} ?>>
-			<?php if (!is_writable($CPATH.$key)) {echo "*";} ?><?php echo $key ?></option>
-		<?php } } ?>
-	</select> <input type="submit" name="Submit" value="Load" /> |
-</form>						
-					</li>
+					<li>Select a file to edit: <?php 
+
+$FL=file_list($CPATH);
+$file_form_options = array();
+foreach( $FL as $value ) {
+	$file_form_options[substr($value, 0, -4)] = $value;
+}
+
+$file_form  = form_select('select', '- Select a File Here -', $file, $file_form_options, array('class' => 'select-file'));
+$file_form .= ' '.form_input('button-load', 'submit', 'Load', array('name' => 'submit')) .' | ';
+
+echo form_form('form-file', $_SERVER['PHP_SELF'], $file_form);
+
+?>				</li>
 					<li><a href="tokens.php">Tokens</a> | </li>
 					<li><a href="user_admin.php">Manage Users</a></li>
 				</ul>
@@ -80,16 +81,28 @@ if($_POST["select"] && $action=="Load") {
 
 	<section>
 	<div id="main-form">
-    <form id="form-content" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-	  <h2>Currently editing: <?php echo !empty($file) ? $file : 'None - Please select a file to edit.';  ?></h2>
-		<textarea name="textfield" cols="60" rows="20" class="ckeditor"><?php echo $text ?></textarea>
-		<p class="buttons">Backup: <?php if (!is_writable($BPATH) || empty($file)): echo "unavailable"; else: ?><input name="Submit" type="submit" id="backup" value="Backup" /> <input name="Submit" type="submit" id="restore" value="Restore" /><?php endif; ?> | Live: <input name="Submit" type="submit" id="update" value="Update" <?php if (empty($file)) { echo 'disabled="disabled"'; } ?> /></p>
-		<input name="select" type="hidden" value="<?php echo $file; ?>" />
-    
-/* TODO: This is where we add the meta-data */	  
-	  
-		</form>
-	</div>
+<?php 
+
+$nofile = array();
+if ( empty($file) ) {
+	$nofile['disabled'] = 'disabled';
+	$nofile['title'] = 'No file has been selected';
+}
+
+$content_form  = '<h2>Currently editing: ';
+$content_form .= !empty($file) ? $file : 'None - Please select a file to edit.';
+$content_form .= '</h2>'. form_textarea(textfield, $text, array('class' => 'ckeditor', 'cols' => 60, 'rows' => 20));
+$content_form .= '<p class="buttons">Backup: ';
+$content_form .= (!is_writable($BPATH) || empty($file)) ? 'unavailable' : 
+									form_input('button-backup', 'submit', 'Backup', array('name' => 'submit')) .' '. 
+									form_input('button-restore', 'submit', 'Restore', array('name' => 'submit'));
+$content_form .= ' | Live: '. form_input('button-update', 'submit', 'Update', array_merge(array('name' => 'submit'), $nofile));
+$content_form .= form_input('file-name', 'hidden', $file, array('name' => 'select'));
+
+/* TODO: This is where we add the meta-data */	
+
+echo form_form('form-content', $_SERVER['PHP_SELF'], $content_form);
+?>	</div>
     </section>
 </body>
 </html>

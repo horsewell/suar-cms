@@ -13,7 +13,7 @@ function file_list($dir) {
 		$fd = @opendir($dir);
 		while (($part = @readdir($fd)) == true) {
 			clearstatcache();
-			if ($part != "." && $part != ".." && $part != ".htaccess") {
+			if ($part[0] != "." && $part[0] != "_") {
 				if (!is_dir($part)) {
 					$file_array[] = $part;
 				}
@@ -207,21 +207,42 @@ function form_form($id, $action, $content, $method = 'post', $options = array())
 	foreach( $options as $name => $value) {
 		$tag .= ' '. $name .'="'. $value .'"';
 	}
-	$form .= "<form action=\"$action\" method=\"$method\"{$tag}>\n";
+	$form .= "<form id=\"{$id}\" action=\"$action\" method=\"$method\"{$tag}>\n";
 	$form .= $content;
 	return $form .'</form>';
 }
 
 function form_input($id, $type, $value, $options = array()) {
 	$tag = empty($value) ? '' : " value=\"{$value}\"";
+	$tag .= array_key_exists('name', $options) ? '' : " name=\"{$id}\"";
 	foreach( $options as $name => $value) {
 		$tag .= ' '. $name .'="'. $value .'"';
 	}
-	return "<input id=\"{$id}\" name=\"{$id}\" type=\"{$type}\"{$tag} />";
+	return "<input id=\"{$id}\" type=\"{$type}\"{$tag} />";
 }
 
+function form_select($id, $select_title, $select_value, $select_options, $options = array()) {
+	$tag = '';
+	foreach( $options as $name => $value) {
+		$tag .= ' '. $name .'="'. $value .'"';
+	}
+	$select = "<select id=\"{$id}\" name=\"{$id}\"{$tag}>";
+	$select .="<option value=\"\">{$select_title}</option>";
+	foreach ($select_options as $key => $value) {
+		$select .= "<option value=\"{$value}\" ";
+		$select .= $select_value === $value ? 'selected' : '';
+		$select .= ' >'. $key .'</option>';
+	}
+	return $select.'</select>';
+}
 
-
+function form_textarea($id, $text_value, $options) {
+	$tag = '';
+	foreach( $options as $name => $value) {
+		$tag .= ' '. $name .'="'. $value .'"';
+	}
+	return "<textarea id=\"{$id}\" name=\"{$id}\"{$tag}>{$text_value}</textarea>";
+}
 
 
 
