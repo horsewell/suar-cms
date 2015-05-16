@@ -4,13 +4,10 @@ include('admin/functions.php');
 
 $page_file = array_key_exists('page', $_GET) ? $_GET['page'] : 'home';
 
-//$page_content = txt_load($page_file .'.txt');
-$page_content = file_get_contents('content/'.$page_file.'.txt');
+$page_content = txt_load($CPATH.$page_file .'.txt');
+$page_content = token_filter($page_content);
 
-// preload the page
-// parse the tokens and stubstitue
 // filter the page for bad things
-// display the page
 
 // this will get ready for meta-data changes
 // also allow this page to access the tokens
@@ -32,11 +29,9 @@ $page_content = file_get_contents('content/'.$page_file.'.txt');
 	<meta name="keywords" content="" />
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0">
-</head>
-<!-- !Body -->
+</head><!-- !Body -->
 <body>
-	<div id="container">
-		
+	<div id="container">	
 		<section id="main">
 <?php echo $page_content; ?>
 		</section><!-- /main -->

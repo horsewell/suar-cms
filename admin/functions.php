@@ -4,6 +4,11 @@
  *  Basic functionality  
  */
 
+$CPATH="content/";
+$BPATH="backup/";
+$TOKEN_FILE = 'tokens.json';
+$tokens = array();
+
 /**
  *  Get the list of files  
  */
@@ -38,8 +43,7 @@ function file_list($dir) {
  */
 
 function txt_load($file) {
-	global $CPATH;
-	return file_get_contents($CPATH.$file);
+	return file_get_contents($file);
 }
 
 /**
@@ -47,9 +51,8 @@ function txt_load($file) {
  */
 
 function txt_update($file, $string) {
-	global $CPATH;
 	if (get_magic_quotes_gpc()) { $string = stripslashes($string); }
-	$fp = fopen($CPATH.$file, "w");
+	$fp = fopen($file, "w");
 	fwrite($fp, $string);
 	fclose($fp);
 }
@@ -59,8 +62,7 @@ function txt_update($file, $string) {
  */
 
 function txt_backup($file, $string) {
-	global $BPATH;
-	$fp = fopen($BPATH.$file, "w");
+	$fp = fopen($file, "w");
 	fwrite($fp, $string);
 	fclose($fp);
 }
@@ -70,8 +72,7 @@ function txt_backup($file, $string) {
  */
 
 function txt_restore($file, $string) {
-	global $BPATH;
-	return file_get_contents($BPATH.$file);
+	return file_get_contents($file);
 }
 
 /**
@@ -94,13 +95,105 @@ function clean_html($html, $allowable_tags = '') {
 	return $html;
 }
 
+/**
+ *  Filter the text page
+ **/
+
+function token_filter($page_content) {
+	global $tokens, $CPATH, $TOKEN_FILE;
+	// make sure the $tokens are loaded
+	if ( !(isset($tokens) && count($tokens) > 0) ) {
+		$tokens = tokens_load($CPATH.$TOKEN_FILE);
+	}
+	
+	preg_match_all('/\[[a-zA-z0-9\-]+\]/', $page_content, $matches);
+	$matches = array_unique($matches)[0];
+	
+	foreach($matches as $value) {
+		$match = trim($value, "[]");
+		$page_content = str_replace('['.$match.']', $tokens[$match], $page_content);
+	}
+	
+	//$page_content .= '<div style="background-color: yellow;"><pre>found tokens = '. print_r($matches, TRUE) .'</pre></div>';
+	//$page_content .= '<div style="background-color: gray;"><pre>$tokens = '. print_r($tokens, TRUE) .'</pre></div>';
+	
+	return $page_content;
+}
 
 /**
- *  
+ *  load token variables
  */
 
+function tokens_load($file = 'tokens.json') {
+	$json   = txt_load($file);
+	$tokens = json_decode($json, TRUE);
+	
+	$tokens['this-year'] = date('Y');
+	$tokens['this-month'] = date('n');
+	$tokens['this-day'] = date('j'); 
+	// $tokens['current-user'] = $GLOBALS[''];
+
+	return $tokens;
+}
+
+/**
+ *  save token variables.
+ **/
+
+function tokens_save($file = 'tokens.json', $tokens = array()) {
+	foreach($tokens as $key => $value ) {
+		if ( strrpos($key, "this-") === 0 ) {
+			unset($tokens[$key]);
+		}
+	}
+	txt_update($file, json_encode($tokens));
+}
+
+/**
+ *  parse JSON
+ **/
 
 
 
+/**
+ *  Display variable form
+ **/
 
+function display_form($post_values, $tokens) {
+	global $self;
+	$form  ="";
+	$form .= "<form action=\"{$self}\" method=\"post\">\n";
+
+	$form .= "<table>";
+	
+	ksort($tokens);
+	foreach($tokens as $key => $value) {
+		$form .="<tr><td>[$key]</td><td>";
+		if ( strrpos($key, "this-") !== 0 ) {
+			$form .="<input type=\"Text\" size=\"20\" name=\"token_{$key}\" value=\"{$value}\">";
+		} else {
+			$form .= " {$value} ";
+		}
+		$form .= "</td><td>";
+		if ( strrpos($key, "this-") !== 0 ) {
+			$form .="<input type=\"checkbox\" name=\"delete_{$key}\" value=\"$key\">";
+		} else {
+			$form .= "&nbsp;";
+		}
+		$form .= "</td></tr>";
+  }
+  
+  $form .="<tr>";
+	$form .="<td><input type=\"Text\" size=\"20\" name=\"new-token-name\"></td>";
+	$form .="<td><input type=\"Text\" size=\"20\" name=\"new-token-value\"></td>";
+	$form .="<td>&nbsp;</td>";
+	$form .="</tr>";
+
+  $form .= "</table>";
+
+  $form .= "<input type=\"Hidden\" name=\"action\" value=\"doAction\">";
+  $form .= "<input type=\"Submit\" name=\"submit\" value=\"Save\">";
+	$form .= "</form>";
+	return $form;
+}
 
