@@ -1,5 +1,12 @@
 <?php
 
+include('admin/functions.php');
+
+$page_file = array_key_exists('page', $_GET) ? $_GET['page'] : 'home';
+
+//$page_content = txt_load($page_file .'.txt');
+$page_content = file_get_contents('content/'.$page_file.'.txt');
+
 // preload the page
 // parse the tokens and stubstitue
 // filter the page for bad things
@@ -7,6 +14,8 @@
 
 // this will get ready for meta-data changes
 // also allow this page to access the tokens
+
+// the page should be ?page=home ?page=features ?page=contact
 
 ?><!DOCTYPE html>   
 <!--[if lt IE 7 ]> <html lang="en" class="no-js ie6"> <![endif]-->
@@ -29,7 +38,7 @@
 	<div id="container">
 		
 		<section id="main">
-<? include('content/home.txt'); ?>
+<?php echo $page_content; ?>
 		</section><!-- /main -->
 		
 		<footer>
