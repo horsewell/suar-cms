@@ -1,0 +1,6 @@
+{
+	"name": "Contact Form",
+	"description": "A form to allow people on the site contact you.",
+	"enabled": true,
+	"token": true
+}

@@ -1,0 +1,6 @@
+{
+	"name": "Gallery",
+	"description": "Create a gallery",
+	"enabled": true,
+	"token": true
+}

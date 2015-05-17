@@ -61,19 +61,22 @@ function form_constructor($form_array, $post) {
 		$type = $options['type']; unset($options['type']);
 		$name = array_key_exists('name', $options) ? $options['name'] : $id;
 		
+		$value = array_key_exists($name, $post) ? $post[$name] : $options['value'];
+		$value = empty($value) ? $options['default_value'] : $value;
+		
 		if ( in_array($type, $input_types) ) {
 			$form .= '<div><label for="'.$id.'">'.$options['title'].'</label> ';
-			$form .= form_input($id, $type, $post[$name], $options['attributes']) .'</div>';
+			$form .= form_input($id, $type, $value, $options['attributes']) .'</div>';
 		} else if ( $type == 'textarea' ) {
 			$form .= '<div><label for="'.$id.'">'.$options['title'].'</label><br/>';
-			$form .= form_textarea($id, $post[$name], $options['attributes']) .'</div>';
+			$form .= form_textarea($id, $value, $options['attributes']) .'</div>';
 		} else if ( $type == 'select' ) {
 			if ( is_string($options['select-options']) ) {
-				$options['select-options'] = call_user_func($options['select-options']);
+				$options['select-options'] = call_user_func($options['select-options'], $value);
 			}
 			$form .= '<div><label for="'.$id.'">'.$options['title'].'</label>';
-			$form .= form_select($id, '', $post[$name], $options['select-options'], $options['attributes']) .'</div>';
-		} else if ( $type == 'html' ) {
+			$form .= form_select($id, '', $value, $options['select-options'], $options['attributes']) .'</div>';
+		} else if ( $type == 'html' || empty($type) ) {
 			$form .= form_html($options['html']);
 		}
 	}

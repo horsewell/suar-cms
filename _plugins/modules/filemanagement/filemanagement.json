@@ -1,0 +1,6 @@
+{
+	"name": "File Management",
+	"description": "Allows you to upload and maniplulate files.",
+	"enabled": true,
+	"token": false
+}
