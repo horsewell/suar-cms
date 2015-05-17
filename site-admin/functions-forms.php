@@ -6,17 +6,17 @@
 
 function form_tag_attributes($id, $options) {
 	if ( !is_array($options) ) { return $options; }
-	if ( !array_key_exists('name', $options) ) { $options['name'] = $id; } // if no name then give ID
-	$attributes = tag_attributes($options);
-	return $attributes;
+	if ( empty($options['name']) ) { $options['name'] = $id; } // if no name then give ID
+	return tag_attributes($options);
 }
 
 // ---- TAGS
 
 function form_form($id, $action, $content, $method = 'post', $options = array()) {
 	$attributes = form_tag_attributes($id, $options);
-	$form .= "<form id=\"{$id}\" action=\"{$action}\" method=\"$method\"{$attributes}>\n";
+	$form .= "<form id=\"{$id}\" name=\"{$id}\" action=\"{$action}\" method=\"$method\"{$attributes}>\n";
 	$form .= $content;
+	$form .= form_input($id.'-name', 'hidden', $id, array('name' => 'form-name'));
 	return $form .'</form>';
 }
 
@@ -50,23 +50,30 @@ function form_html($html) {
 
 
 function form_constructor($form_array, $post) {
+	if ( $post['form-name'] !== $form_array['id'] ) { $post = array(); } // not our form not our business
 	$form = '';
 	$input_types = array(
 		'text', 'password', 'submit', 'radio', 'checkbox',
 		'button', 'color', 'date', 'email', 'month',
-		'range', 'tel', 'time', 'url', 'week',
+		'range', 'tel', 'time', 'url', 'week', 'hidden',
 	);
 	foreach($form_array as $id => $options) {
 		if ( !is_array($options) || !array_key_exists('type', $options) ) { continue; }
-		$type = $options['type']; unset($options['type']);
-		$name = array_key_exists('name', $options) ? $options['name'] : $id;
+		$type = $options['type'];
+		$options['attributes']['name'] = empty($options['attributes']['name']) ? $id : $options['attributes']['name'];
 		
-		$value = array_key_exists($name, $post) ? $post[$name] : $options['value'];
-		$value = empty($value) ? $options['default_value'] : $value;
-		
+		$value = $options['value'];
+		if (!in_array($type, array('submit','button'))) {
+			$value = array_key_exists($options['attributes']['name'], $post) ? $post[$options['attributes']['name']] : $value;
+			$value = empty($value) ? $options['default_value'] : $value;
+		}
 		if ( in_array($type, $input_types) ) {
-			$form .= '<div><label for="'.$id.'">'.$options['title'].'</label> ';
-			$form .= form_input($id, $type, $value, $options['attributes']) .'</div>';
+			$input_item = form_input($id, $type, $value, $options['attributes']);
+			if ( empty($options['title']) ) {
+				$form .= $input_item;
+			} else {
+				$form .= '<div><label for="'.$id.'">'.$options['title'].'</label> '.$input_item.'</div>';
+			}
 		} else if ( $type == 'textarea' ) {
 			$form .= '<div><label for="'.$id.'">'.$options['title'].'</label><br/>';
 			$form .= form_textarea($id, $value, $options['attributes']) .'</div>';
@@ -84,7 +91,11 @@ function form_constructor($form_array, $post) {
 }
 
 function form_process_post($form, $post) {
-	
+	if ( $post['form-name'] !== $form_array['id'] ) { return; } // not our form not our business
+
+
+
+
 // make sure items validate
 // construct json and html
 // save the two files or just one?	

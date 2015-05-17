@@ -1,0 +1,5 @@
+<h1>About Page</h1>
+
+<p>This is about me.</p>
+
+<p>&copy; [this-year] | [company-name] | [company-phone]</p>

@@ -23,6 +23,20 @@ if ( empty($file) ) {
 	$nofile['title'] = 'No file has been selected';
 }
 
+if($_POST["select"] && $action=="Load") {
+	$page_content = txt_load($CPATH.$_POST["select"]);
+	// TODO: load meta-data as well
+} else if ($file) {
+	if ($action=="Restore") {
+		$text = txt_restore($BPATH.$file, $text);
+	} else if($text && $action=="Update") {
+		txt_update($CPATH.$file, $text);
+		// TODO: save meta-data as well
+	} else if($text && $action=="Backup") {
+		txt_backup($BPATH.$file, $text);
+	}
+}
+
 $page_metadata = array(
 	'page-title' => array(
 		'title' => 'Page Title',
@@ -39,7 +53,8 @@ $page_metadata = array(
 	'page-template' => array(
 		'title' => 'Template',
 		'type' => 'select',
-		'select-options' => 'page_template_list'
+		'select-options' => 'page_template_list',
+		'default_value' => 'page-plain.html',
 	),
 	'page-html-1' => array(
 		'type' => 'html',
@@ -56,6 +71,7 @@ $page_metadata = array(
 	'page-body' => array(
 		'title' => 'Body',
 		'type' => 'textarea',
+		'value' => $page_content,
 		'attributes' => array('class' => 'ckeditor', 'cols' => 60, 'rows' => 20),
 	),
 	'page-html-4' => array(
@@ -68,6 +84,10 @@ $page_metadata = array(
 		'attributes' => array_merge(array(
 			'name' => 'submit'
 		), $nofile),
+	),
+	'page-html-6' => array(
+		'type' => 'html',
+		'html' => ' ',
 	),
 	'button-restore' => array(
 		'type' => 'submit',
@@ -99,21 +119,8 @@ $page_metadata = array(
 	'post_call' => 'admin_form_page_post'
 );
 
-if($_POST["select"] && $action=="Load") {
-	$_POST['page-body'] = txt_load($CPATH.$_POST["select"]);
-	// TODO: load meta-data as well
-} else if ($file) {
-	if ($action=="Restore") {
-		$text = txt_restore($BPATH.$file, $text);
-	} else if($text && $action=="Update") {
-		txt_update($CPATH.$file, $text);
-		// TODO: save meta-data as well
-	} else if($text && $action=="Backup") {
-		txt_backup($BPATH.$file, $text);
-	}
-}
-
 function admin_form_page_post($form, $post) {
+	
 	return '<div style="background-color: gray;"><pre>$tokens = '. print_r($post, TRUE) .'</pre></div>';
 }
 
@@ -168,7 +175,9 @@ echo form_form('form-file', $_SERVER['PHP_SELF'], $file_form);
 	<div id="main-form"><?php 
 
 if ( !empty($_POST) ) {
-	print call_user_func($page_metadata['post_call'], $page_metadata, $_POST);
+	if ( $_POST['form-name'] === $page_metadata['id'] ) {
+		print call_user_func($page_metadata['post_call'], $page_metadata, $_POST);
+	}
 }
 
 //$content_form  = '<h2>Currently editing: ';
