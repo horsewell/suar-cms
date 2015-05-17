@@ -36,21 +36,18 @@ if($_POST["select"] && $action=="Load") {
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Website Content Administration Area</title>
-	
-	<link rel="stylesheet" type="text/css" href="style.css?t=E0LB">
-	<link rel="stylesheet" type="text/css" href="../_libraries/ckeditor/skins/moono/editor.css?t=E0LB">
-	<link rel="stylesheet" type="text/css" href="../_libraries/ckeditor/plugins/uicolor/yui/assets/yui.css?t=E0LB">
-	
-	<script type="text/javascript" src="../_libraries/ckeditor/ckeditor.js"></script><style>.cke{visibility:hidden;}</style>
-	
-	<script src="js/domready.js" type="application/javascript"></script>
-	<script src="js/script.js" type="application/javascript"></script>
-	<!-- created a custom file outside the ckeditor folder so when upgrading ckeditor will not lose config (but may have to update it) -->
-	<script src="js/ckeditor_config.js?t=E0LB" type="text/javascript"></script>
-	
-	<script type="text/javascript" src="../_libraries/ckeditor/lang/en.js?t=E0LB"></script>
-	<script type="text/javascript" src="../_libraries/ckeditor/styles.js?t=E0LB"></script>
-	<script type="text/javascript" src="../_libraries/ckeditor/plugins/uicolor/yui/yui.js?t=E0LB"></script>
+<?php
+$ckeditor_path = '../_libraries/ckeditor/';
+echo metadata_link('stylesheet', 'text/css', 'style.css?t=E0LB').
+		 metadata_link('stylesheet', 'text/css', $ckeditor_path.'skins/moono/editor.css?t=E0LB').
+		 metadata_link('stylesheet', 'text/css', $ckeditor_path.'plugins/uicolor/yui/assets/yui.css?t=E0LB').
+     metadata_script($ckeditor_path.'ckeditor.js').'<style>.cke{visibility:hidden;}</style>'.
+     metadata_script('js/domready.js').metadata_script('js/script.js').
+     metadata_script('js/ckeditor_config.js?t=E0LB').
+     metadata_script($ckeditor_path.'lang/en.js?t=E0LB').
+     metadata_script($ckeditor_path.'styles.js?t=E0LB').
+     metadata_script($ckeditor_path.'plugins/uicolor/yui/yui.js?t=E0LB');
+?>
 </head>
 
 <body class="page-main-admin">

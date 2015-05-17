@@ -81,10 +81,10 @@ function token_display_form($post_values, $tokens) {
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Token Administration</title>
-	<link rel="stylesheet" type="text/css" href="style.css?t=E0LB">
-	
-	<script src="js/domready.js" type="application/javascript"></script>
-	<script src="js/script.js" type="application/javascript"></script>
+<?php
+echo metadata_link('stylesheet', 'text/css', 'style.css?t=E0LB').
+     metadata_script('js/domready.js').metadata_script('js/script.js');
+?>
 </head>
 
 <body class="user-admin">

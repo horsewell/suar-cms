@@ -149,17 +149,20 @@ function token_save($file = 'tokens.json', $tokens = array()) {
 }
 
 /**
- *  parse JSON
+ *  functions for meta-data
  **/
 
-
-/**
- *  functions for meta-data forms
- **/
-
-function create_metadata_form() {
-	
+function metadata_link($rel, $type, $url) {
+	return "<link rel=\"{$rel}\" type=\"{$type}\" href=\"{$url}\" />";
 }
 
+function metadata_script($url) {
+	return "<script type=\"application/javascript\" src=\"{$url}\"></script>";
+}
+
+function metadata_meta($name, $content, $httpequiv = FALSE) {
+	$type = !$httpequiv ? 'name' : 'http-equiv';
+	return "<meta {$type}=\"{$name}\" content=\"{$content}\" />";
+}
 
 
