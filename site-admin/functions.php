@@ -114,11 +114,10 @@ function token_filter($page_content) {
 		$tokens = token_load(PATH_CONTENT.FILE_TOKEN);
 	}
 	
-	preg_match_all('/\[[a-zA-z0-9\-]+\]/', $page_content, $matches);
-	$matches = array_unique($matches)[0];
+	preg_match_all('/\[([a-zA-z0-9\-]+)\]/', $page_content, $matches);
+	$matches = array_unique($matches)[1];
 	
 	foreach($matches as $value) {
-		$match = trim($value, "[]");
 		$page_content = str_replace('['.$match.']', $tokens[$match], $page_content);
 	}
 	
@@ -199,6 +198,7 @@ function metadata_meta($name, $content, $httpequiv = FALSE) {
 }
 
 function tag_attributes($options) {
+	if ( !is_array($options) ) { return $options; }
 	$attributes = '';
 	foreach( $options as $name => $value) {
 		$attributes .= ' '. check_plain($name) .'="'. check_plain($value) .'"';

@@ -88,6 +88,34 @@ if ( empty($file) ) {
 	$nofile['title'] = 'No file has been selected';
 }
 
+$page_metadata = array(
+	'page-title' => array(
+		'title' => 'Page Title',
+		'type' => 'text',
+	),
+	'page-keywords' => array(
+		'title' => 'Keywords',
+		'type' => 'text',
+	),
+	'page-description' => array(
+		'title' => 'Description',
+		'type' => 'text',
+	),
+	'page-template' => array(
+		'title' => 'Template',
+		'type' => 'select',
+		'select-options' => 'page_template_list'
+	),
+	'page-body' => array(
+		'title' => 'Body',
+		'type' => 'textarea',
+		'attributes' => array('class' => 'ckeditor', 'cols' => 60, 'rows' => 20),
+	),
+	'action' => $_SERVER['PHP_SELF'],
+	'id'     => 'page-from',
+	'post_call' => 'admin_form_page_post'
+);
+
 $content_form  = '<h2>Currently editing: ';
 $content_form .= !empty($file) ? $file : 'None - Please select a file to edit.';
 $content_form .= '</h2>'. form_textarea(textfield, $text, array('class' => 'ckeditor', 'cols' => 60, 'rows' => 20));
@@ -98,13 +126,8 @@ $content_form .= (!is_writable($BPATH) || empty($file)) ? 'unavailable' :
 $content_form .= ' | Live: '. form_input('button-update', 'submit', 'Update', array_merge(array('name' => 'submit'), $nofile));
 $content_form .= form_input('file-name', 'hidden', $file, array('name' => 'select'));
 
-/* TODO: This is where we add the meta-data */	
-
-$content_form .= '<p><label for="page-title">Title</label> '.form_input('page-title', 'text', $page_title) .'</p>';
-$content_form .= '<p><label for="page-keywords">Keywords</label> '.form_input('page-keywords', 'text', $page_keywords) .'</p>';
-$content_form .= '<p><label for="page-description">Descriptions</label> '.form_input('page-description', 'text', $page_description) .'</p>';
-
 echo form_form('form-content', $_SERVER['PHP_SELF'], $content_form);
+echo form_constructor($page_metadata, $_POST);
 ?>	</div>
     </section>
 </body>
