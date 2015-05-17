@@ -14,8 +14,8 @@ include_once('config.php');
 include_once('functions-forms.php');
 include_once('functions.php');
 
-$CPATH = '../'.$CPATH;
-$BPATH = '../'.$BPATH;
+$CPATH = '../'.PATH_CONTENT;
+$BPATH = '../'.PATH_BACKUP;
 
 if($_POST["select"] && $action=="Load") {
 	$text = txt_load($CPATH.$_POST["select"]);
@@ -64,14 +64,15 @@ foreach( $FL as $value ) {
 	$file_form_options[substr($value, 0, -4)] = $value;
 }
 
-$file_form  = form_select('select', '- Select a File Here -', $file, $file_form_options, array('class' => 'select-file'));
+$file_form  = form_select('select', '- Select a File -', $file, $file_form_options, array('class' => 'select-file'));
 $file_form .= ' '.form_input('button-load', 'submit', 'Load', array('name' => 'submit')) .' | ';
 
 echo form_form('form-file', $_SERVER['PHP_SELF'], $file_form);
 
 ?>				</li>
+					<li><a href="plugins.php">Plugins</a> | </li>
 					<li><a href="tokens.php">Tokens</a> | </li>
-					<li><a href="user.php">Manage Users</a></li>
+					<li><a href="user.php">Users</a></li>
 				</ul>
 			</nav>
 		</div>
@@ -98,6 +99,10 @@ $content_form .= ' | Live: '. form_input('button-update', 'submit', 'Update', ar
 $content_form .= form_input('file-name', 'hidden', $file, array('name' => 'select'));
 
 /* TODO: This is where we add the meta-data */	
+
+$content_form .= '<p><label for="page-title">Title</label> '.form_input('page-title', 'text', $page_title) .'</p>';
+$content_form .= '<p><label for="page-keywords">Keywords</label> '.form_input('page-keywords', 'text', $page_keywords) .'</p>';
+$content_form .= '<p><label for="page-description">Descriptions</label> '.form_input('page-description', 'text', $page_description) .'</p>';
 
 echo form_form('form-content', $_SERVER['PHP_SELF'], $content_form);
 ?>	</div>

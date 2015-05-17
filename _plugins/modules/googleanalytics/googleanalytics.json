@@ -2,5 +2,5 @@
 	"name": "Google Analytics",
 	"description": "Track user statistics via google analyics",
 	"enabled": true,
-	"token": false,
+	"token": false
 }

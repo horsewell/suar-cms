@@ -26,7 +26,7 @@ include('site-admin/functions.php');
 
 $page_file = array_key_exists('page', $_GET) ? $_GET['page'] : 'home';
 
-$page_content = txt_load($CPATH.$page_file .'.txt');
+$page_content = txt_load(PATH_CONTENT.$page_file .'.txt');
 // TODO: load meta-data as well
 $page_content = token_filter($page_content);
 

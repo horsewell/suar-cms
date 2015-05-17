@@ -5,11 +5,8 @@
  **/
 
 function form_tag_attributes($id, $options) {
-	$attributes = '';
-	$attributes .= array_key_exists('name', $options) ? '' : ' name="'.check_plain($id).'"';
-	foreach( $options as $name => $value) {
-		$attributes .= ' '. check_plain($name) .'="'. check_plain($value) .'"';
-	}
+	if ( !array_key_exists('name', $options) ) { $options['name'] = $id; } // if no name then give ID
+	$attributes = tag_attributes($options);
 	return $attributes;
 }
 
@@ -47,3 +44,35 @@ function form_textarea($id, $text_value, $options) {
 	$attributes = form_tag_attributes($id, $options);
 	return "<textarea id=\"{$id}\"{$attributes}>{$text_value}</textarea>";
 }
+
+function form_html($html) {
+	return $html;
+}
+
+
+
+function form_constructor($form, $post) {
+/*
+
+each form item needs: tag, type, id, default value, options
+will look for value in $post variable based on name
+
+
+*/
+}
+
+function form_process_post($form, $post) {
+/*
+
+cycle through the form
+get each post
+process based on from (verify)
+if error display again with values
+if no error pass to the save function
+
+// http://php.net/manual/en/functions.variable-functions.php
+// http://php.net/manual/en/function.call-user-func.php
+
+*/
+}
+

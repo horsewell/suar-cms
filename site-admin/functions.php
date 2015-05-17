@@ -8,15 +8,13 @@
  *  Get the list of files  
  */
 
-function file_list($dir) {
+function directory_list($dir) {
 	if (is_dir($dir)) {
 		$fd = @opendir($dir);
 		while (($part = @readdir($fd)) == true) {
 			clearstatcache();
 			if ($part[0] != "." && $part[0] != "_") {
-				if (!is_dir($part)) {
-					$file_array[] = $part;
-				}
+				$file_array[] = $part;
 			}
 		}
 		if ($fd == true) {
@@ -29,8 +27,19 @@ function file_list($dir) {
 			return $file_array = NULL;
 		}
 	} else {
-		return false;
+		return FALSE;
 	}
+}
+
+function file_list($dir) {
+	$directory_contents = directory_list($dir);
+	if ( !$directory_contents ) { return FALSE; }
+	foreach($directory_contents as $item) {
+		if (!is_dir($dir.$item)) { // only files
+			$file_array[] = $item;
+		}
+	}
+	return $file_array;
 }
 
 /**
@@ -99,10 +108,10 @@ function message($string, $type) {
  **/
 
 function token_filter($page_content) {
-	global $tokens, $CPATH, $TOKEN_FILE;
+	global $tokens;
 	// make sure the $tokens are loaded
 	if ( !(isset($tokens) && count($tokens) > 0) ) {
-		$tokens = token_load($CPATH.$TOKEN_FILE);
+		$tokens = token_load(PATH_CONTENT.FILE_TOKEN);
 	}
 	
 	preg_match_all('/\[[a-zA-z0-9\-]+\]/', $page_content, $matches);
@@ -136,6 +145,30 @@ function token_load($file = 'tokens.json') {
 }
 
 /**
+ *  plugins get, set and load.
+ **/
+
+function plugins_get_status($dir) {
+	if ( file_exists($dir.'status.json') ) {
+		return json_decode(txt_load($dir.'status.json'), TRUE);
+	}	
+	return false;
+}
+
+function plugins_set_status($dir, $plugin_status) {
+	txt_update($dir.'status.json', json_encode($plugin_status));
+}
+
+function plugins_load($dir, &$plugin_status) {
+	$plugin_status = !empty($plugin_status) ? plugins_get_status($dir) : $plugin_status;
+	foreach($plugin_status as $plugin => $status) {
+		if ($status) {
+			require_once($dir.$plugin.'/'.$plugin.'.module');
+		}
+	}
+}
+
+/**
  *  save token variables.
  **/
 
@@ -165,4 +198,11 @@ function metadata_meta($name, $content, $httpequiv = FALSE) {
 	return "<meta {$type}=\"{$name}\" content=\"{$content}\" />";
 }
 
+function tag_attributes($options) {
+	$attributes = '';
+	foreach( $options as $name => $value) {
+		$attributes .= ' '. check_plain($name) .'="'. check_plain($value) .'"';
+	}
+	return $attributes;
+}
 
