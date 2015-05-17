@@ -75,8 +75,8 @@ function txt_restore($file, $string) {
  */
 
 function check_plain($text) {
-	$text = strip_tags($text);
-	return $text;
+	$text = strip_tags($text); // remove all tags
+	return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); // From Drupal 7
 }
 
 /**
@@ -88,6 +88,10 @@ function clean_html($html, $allowable_tags = '') {
 		$html = strip_tags($html, $allowable_tags);
 	}
 	return $html;
+}
+
+function message($string, $type) {
+	return '<div class="message '.$type.'">'.$string.'</div>';
 }
 
 /**
@@ -149,47 +153,6 @@ function token_save($file = 'tokens.json', $tokens = array()) {
  **/
 
 
-
-/**
- *  Display variable form
- **/
-
-function token_display_form($post_values, $tokens) {
-
-	$form = '<table>';
-	
-	ksort($tokens);
-	foreach($tokens as $key => $value) {
-		$form .="<tr><td>[$key]</td><td>";
-		if ( strrpos($key, "this-") !== 0 ) {
-			$form .= form_input('token_'.$key, 'Text', $value, array('size' => 20,));
-		} else {
-			$form .= " {$value} ";
-		}
-		$form .= "</td><td>";
-		if ( strrpos($key, "this-") !== 0 ) {
-			$form .= form_input('delete_'.$key, 'checkbox', $key);
-		} else {
-			$form .= "&nbsp;";
-		}
-		$form .= "</td></tr>";
-  }
-  
-  $form .="<tr>";
-	$form .="<td>".form_input('new-token-name', 'Text', '', array('size' => 20,))."</td>";
-	$form .="<td>".form_input('new-token-value', 'Text', '', array('size' => 20,))."</td>";
-	$form .="<td>&nbsp;</td>";
-	$form .="</tr>";
-
-  $form .= '</table>';
-
-  $form .= form_input('action', 'Hidden', 'doAction');
-  $form .= form_input('submit', 'Submit', 'Save');
-  
-	return form_form('token-form', $_SERVER['PHP_SELF'], $form);
-}
-
-
 /**
  *  functions for meta-data forms
  **/
@@ -197,53 +160,6 @@ function token_display_form($post_values, $tokens) {
 function create_metadata_form() {
 	
 }
-
-/**
- *  functions forms
- **/
-
-function form_form($id, $action, $content, $method = 'post', $options = array()) {
-	$tag = '';
-	foreach( $options as $name => $value) {
-		$tag .= ' '. $name .'="'. $value .'"';
-	}
-	$form .= "<form id=\"{$id}\" action=\"$action\" method=\"$method\"{$tag}>\n";
-	$form .= $content;
-	return $form .'</form>';
-}
-
-function form_input($id, $type, $value, $options = array()) {
-	$tag = empty($value) ? '' : " value=\"{$value}\"";
-	$tag .= array_key_exists('name', $options) ? '' : " name=\"{$id}\"";
-	foreach( $options as $name => $value) {
-		$tag .= ' '. $name .'="'. $value .'"';
-	}
-	return "<input id=\"{$id}\" type=\"{$type}\"{$tag} />";
-}
-
-function form_select($id, $select_title, $select_value, $select_options, $options = array()) {
-	$tag = '';
-	foreach( $options as $name => $value) {
-		$tag .= ' '. $name .'="'. $value .'"';
-	}
-	$select = "<select id=\"{$id}\" name=\"{$id}\"{$tag}>";
-	$select .="<option value=\"\">{$select_title}</option>";
-	foreach ($select_options as $key => $value) {
-		$select .= "<option value=\"{$value}\" ";
-		$select .= $select_value === $value ? 'selected' : '';
-		$select .= ' >'. $key .'</option>';
-	}
-	return $select.'</select>';
-}
-
-function form_textarea($id, $text_value, $options) {
-	$tag = '';
-	foreach( $options as $name => $value) {
-		$tag .= ' '. $name .'="'. $value .'"';
-	}
-	return "<textarea id=\"{$id}\" name=\"{$id}\"{$tag}>{$text_value}</textarea>";
-}
-
 
 
 

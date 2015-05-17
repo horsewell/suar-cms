@@ -10,8 +10,9 @@ $file   = $_POST["select"];
 //$file   = $_POST["editing"];
 $action = $_POST["submit"];
 
-include('config.php');
-include('functions.php');
+include_once('config.php');
+include_once('functions-forms.php');
+include_once('functions.php');
 
 $CPATH = '../'.$CPATH;
 $BPATH = '../'.$BPATH;
@@ -73,7 +74,7 @@ echo form_form('form-file', $_SERVER['PHP_SELF'], $file_form);
 
 ?>				</li>
 					<li><a href="tokens.php">Tokens</a> | </li>
-					<li><a href="user_admin.php">Manage Users</a></li>
+					<li><a href="user.php">Manage Users</a></li>
 				</ul>
 			</nav>
 		</div>

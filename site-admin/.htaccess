@@ -1,3 +1,4 @@
+RewriteEngine off
 
 Options -Indexes
 

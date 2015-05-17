@@ -3,10 +3,9 @@ include('../_libraries/class.PasswdAuth.inc');
 $pass = new PasswdAuth(realpath(getcwd()));
 $pass->check();
 
-//$self = $_SERVER['PHP_SELF'];
-
-include('config.php');
-include('functions.php');
+include_once('config.php');
+include_once('functions-forms.php');
+include_once('functions.php');
 
 $CPATH = '../'.$CPATH;
 
@@ -38,6 +37,45 @@ if ( $_POST['action'] === "doAction" ) {
 	}
 }
 
+/**
+ *  Display token form
+ **/
+
+function token_display_form($post_values, $tokens) {
+
+	$form = '<table>';
+	
+	ksort($tokens);
+	foreach($tokens as $key => $value) {
+		$form .="<tr><td>[$key]</td><td>";
+		if ( strrpos($key, "this-") !== 0 ) {
+			$form .= form_input('token_'.$key, 'Text', $value, array('size' => 20,));
+		} else {
+			$form .= " {$value} ";
+		}
+		$form .= "</td><td>";
+		if ( strrpos($key, "this-") !== 0 ) {
+			$form .= form_input('delete_'.$key, 'checkbox', $key);
+		} else {
+			$form .= "&nbsp;";
+		}
+		$form .= "</td></tr>";
+  }
+  
+  $form .="<tr>";
+	$form .="<td>".form_input('new-token-name', 'Text', '', array('size' => 20,))."</td>";
+	$form .="<td>".form_input('new-token-value', 'Text', '', array('size' => 20,))."</td>";
+	$form .="<td>&nbsp;</td>";
+	$form .="</tr>";
+
+  $form .= '</table>';
+
+  $form .= form_input('action', 'Hidden', 'doAction');
+  $form .= form_input('submit', 'Submit', 'Save');
+  
+	return form_form('token-form', $_SERVER['PHP_SELF'], $form);
+}
+
 ?><!DOCTYPE html>
 <html>
 <head>
@@ -55,12 +93,7 @@ if ( $_POST['action'] === "doAction" ) {
 	</header>
 <section><div class="main"><?php
 
-// if remove then give a chance to cancel delete
-
-print token_display_form($_POST, $tokens);
-
-//print '<pre>$_POST = '. print_r($_POST, TRUE) .'</pre>';
-//print '<pre>$tokens = '. print_r($tokens, TRUE) .'</pre>';
+echo token_display_form($_POST, $tokens);
 
 ?></div></section>
 	<nav><p><a href="./">≪ back to the content administration</a></p></nav>
