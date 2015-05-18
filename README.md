@@ -16,8 +16,11 @@ We use ckeditor and I have included a config.js for it which can be changed depe
 I plan on adding support for:
 
 * ~~variables, things like email addresses, phone numbers and other things that appear on the web site~~
-* editing meta-data on pages (having standard tags and able to add extra tags when needed)
-* image and other file uploads but this is dangerous as people can upload viruses, inappropriate files or super large files.
+* ~~editing meta-data on pages (having standard tags and able to add extra tags when needed)~~
+* ~~a basic template system~~
+* caching
+* plugins to allow extra: metadata, tokens and template sections
+* image and other file uploads
 
 If you want to help me, think there is a feature you want or use this code it would be great if you could drop me a message too. :)
 
