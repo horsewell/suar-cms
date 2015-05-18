@@ -206,3 +206,11 @@ function tag_attributes($options) {
 	return $attributes;
 }
 
+function clean_path($path) {
+	$path = trim($path, "/"); // don't start in root
+	return str_replace(
+	array('../'. '~'), // prevent changing down directories but can go up
+	array('', '',),
+	$path
+	);
+}

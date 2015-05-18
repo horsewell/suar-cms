@@ -5,14 +5,15 @@ include('../_libraries/class.PasswdAuth.inc');
 $auth = new PasswdAuth(realpath(getcwd()));
 $auth->check(); // $auth->check('admin'); // <-- only for the admin user
 
-$text   = $_POST["textfield"];
-$file   = $_POST["select"];
-//$file   = $_POST["editing"];
-$action = $_POST["submit"];
-
 include_once('config.php');
 include_once('functions-forms.php');
 include_once('functions.php');
+
+$text   = $_POST["textfield"];
+$file   = clean_path($_POST["select"]);
+//$file   = $_POST["editing"];
+$action = $_POST["submit"];
+
 
 $CPATH = '../'.PATH_CONTENT;
 $BPATH = '../'.PATH_BACKUP;
@@ -24,37 +25,34 @@ if ( empty($file) ) {
 }
 
 if($_POST["select"] && $action=="Load") {
-	$page_content = txt_load($CPATH.$_POST["select"]);
-	// TODO: load meta-data as well
-} else if ($file) {
-	if ($action=="Restore") {
-		$text = txt_restore($BPATH.$file, $text);
-	} else if($text && $action=="Update") {
-		txt_update($CPATH.$file, $text);
-		// TODO: save meta-data as well
-	} else if($text && $action=="Backup") {
-		txt_backup($BPATH.$file, $text);
-	}
+	$json = txt_load($CPATH.$file);
+	$page_content = json_decode($json, TRUE);
+	$page_content['page-body'] = base64_decode($page_content['page-body']);
 }
 
 $page_metadata = array(
 	'page-title' => array(
 		'title' => 'Page Title',
 		'type' => 'text',
+		'value' => $page_content['page-title'],
+		
 	),
 	'page-keywords' => array(
 		'title' => 'Keywords',
 		'type' => 'text',
+		'value' => $page_content['page-keywords'],
 	),
 	'page-description' => array(
 		'title' => 'Description',
 		'type' => 'text',
+		'value' => $page_content['page-description'],
 	),
 	'page-template' => array(
 		'title' => 'Template',
 		'type' => 'select',
 		'select-options' => 'page_template_list',
 		'default_value' => 'page-plain.html',
+		'value' => $page_content['page-template'],
 	),
 	'page-html-1' => array(
 		'type' => 'html',
@@ -71,7 +69,7 @@ $page_metadata = array(
 	'page-body' => array(
 		'title' => 'Body',
 		'type' => 'textarea',
-		'value' => $page_content,
+		'value' => $page_content['page-body'],
 		'attributes' => array('class' => 'ckeditor', 'cols' => 60, 'rows' => 20),
 	),
 	'page-html-4' => array(
@@ -110,6 +108,7 @@ $page_metadata = array(
 	'file-name' => array(
 		'type' => 'hidden',
 		'value' => $file,
+		'save'  => FALSE,
 		'attributes' => array(
 			'name' => 'select'
 		),
@@ -120,8 +119,49 @@ $page_metadata = array(
 );
 
 function admin_form_page_post($form, $post) {
+	if ( $_POST['form-name'] === $page_metadata['id'] ) { return; }
+
+	$page_content = array();
 	
-	return '<div style="background-color: gray;"><pre>$tokens = '. print_r($post, TRUE) .'</pre></div>';
+	foreach( $form as $key => $value ) {
+		$name = $key;
+		//echo '<br>'.$value.'<br>';
+		if ( is_array($value) && array_key_exists('attributes', $value) ) {
+			if ( array_key_exists('name', $value['attributes']) ) {
+				$name  = $value['attributes']['name'];
+			}
+		}
+		if ( !empty($post[$name]) && $value['type'] !== 'submit' && $value['save'] !== FALSE ) {
+			$page_content[$name] = $post[$name];
+			if ( $value['type'] === 'textarea' ) {
+					$page_content[$name] = base64_encode($page_content[$name]);
+			}
+		}
+	}
+	
+	$json = json_encode($page_content, JSON_PRETTY_PRINT);
+	
+	switch($post['submit']) {
+		case 'Update':
+			$_POST['doing'] = "update";
+			txt_update($GLOBALS['CPATH'].$form['file-name']['value'], $json);
+			break;
+		case 'Backup':
+			$_POST['doing'] = "backup";
+			txt_update($GLOBALS['BPATH'].$form['file-name']['value'], $json);
+			break;
+		case 'Restore':
+			$_POST['doing'] = "restore";
+			$json = txt_load($GLOBALS['BPATH'].$form['file-name']['value']);
+			$page_content = json_decode($json, TRUE);
+			$page_content['page-body'] = base64_decode($page_content['page-body']);
+			foreach($page_content as $key => $value) {
+				$_POST[$key] = $value;
+			}
+			break;
+	}
+	
+	return ''; //'<div style="background-color: gray;"><pre>'. print_r($GLOBALS['BPATH'].$file, TRUE) .'</pre></div>';
 }
 
 ?><!DOCTYPE html>
@@ -176,21 +216,9 @@ echo form_form('form-file', $_SERVER['PHP_SELF'], $file_form);
 
 if ( !empty($_POST) ) {
 	if ( $_POST['form-name'] === $page_metadata['id'] ) {
-		print call_user_func($page_metadata['post_call'], $page_metadata, $_POST);
+		echo call_user_func($page_metadata['post_call'], $page_metadata, $_POST);
 	}
 }
-
-//$content_form  = '<h2>Currently editing: ';
-//$content_form .= !empty($file) ? $file : 'None - Please select a file to edit.';
-//$content_form .= '</h2>'. form_textarea('textfield', $text, array('class' => 'ckeditor', 'cols' => 60, 'rows' => 20));
-//$content_form .= '<p class="buttons">Backup: ';
-//$content_form .= (!is_writable($BPATH) || empty($file)) ? 'unavailable' : 
-//									form_input('button-backup', 'submit', 'Backup', array('name' => 'submit')) .' '. 
-//									form_input('button-restore', 'submit', 'Restore', array('name' => 'submit'));
-//$content_form .= ' | Live: '. form_input('button-update', 'submit', 'Update', array_merge(array('name' => 'submit'), $nofile));
-//$content_form .= form_input('file-name', 'hidden', $file, array('name' => 'select'));
-
-//echo form_form('form-content', $_SERVER['PHP_SELF'], $content_form);
 
 echo form_constructor($page_metadata, $_POST);
 ?>	</div>

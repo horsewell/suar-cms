@@ -28,9 +28,10 @@ $page_file = array_key_exists('page', $_GET) ? $_GET['page'] : 'home';
 
 $page_array = array();
 
-$page_array['content'] = txt_load(PATH_CONTENT.$page_file .'.txt');
-// TODO: load meta-data as well
-$page_array['content'] = token_filter($page_array['content']);
+$json = txt_load(PATH_CONTENT.clean_path($page_file) .'.json');
+$page_array = json_decode($json, TRUE);
+$page_array['page-body'] = base64_decode($page_array['page-body']);
+//$page_array['page-body'] = token_filter($page_array['page-body']);
 
 // filter the page for bad things
 
@@ -50,6 +51,8 @@ function page_template($template_file, $page_array) {
 	return $page_template;
 }
 
-print page_template(PATH_TEMPLATES.'page-plain.html', $page_array);
+print token_filter(page_template(PATH_TEMPLATES.clean_path($page_array['page-template']), $page_array));
+
+//print_r($page_array);
 
 ?>
