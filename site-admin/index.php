@@ -118,6 +118,14 @@ $page_metadata = array(
 	'post_call' => 'admin_form_page_post'
 );
 
+/**
+ * admin_form_page_post function.
+ * 
+ * @access public
+ * @param array $form
+ * @param array $post
+ * @return void
+ */
 function admin_form_page_post($form, $post) {
 	if ( $_POST['form-name'] === $page_metadata['id'] ) { return; }
 

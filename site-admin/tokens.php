@@ -37,10 +37,15 @@ if ( $_POST['action'] === "doAction" ) {
 	}
 }
 
-/**
- *  Display token form
- **/
 
+/**
+ * token_display_form function.
+ * 
+ * @access public
+ * @param array $post_values
+ * @param array $tokens
+ * @return string
+ */
 function token_display_form($post_values, $tokens) {
 
 	$form = '<table>';

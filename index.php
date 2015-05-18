@@ -40,6 +40,14 @@ $page_array['page-body'] = base64_decode($page_array['page-body']);
 
 // the page should be ?page=home ?page=features ?page=contact
 
+/**
+ * page_template function.
+ * 
+ * @access public
+ * @param string $template_file
+ * @param array $page_array
+ * @return string
+ */
 function page_template($template_file, $page_array) {
 	$page_template = txt_load($template_file);
 	

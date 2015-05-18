@@ -4,14 +4,32 @@
  *  Functions used to create forms only included when needed (mainly for admin)
  **/
 
+/**
+ * form_tag_attributes function.
+ * 
+ * @access public
+ * @param string $id
+ * @param array $options
+ * @return string
+ */
 function form_tag_attributes($id, $options) {
 	if ( !is_array($options) ) { return $options; }
 	if ( empty($options['name']) ) { $options['name'] = $id; } // if no name then give ID
 	return tag_attributes($options);
 }
 
-// ---- TAGS
 
+/**
+ * form_form function.
+ * 
+ * @access public
+ * @param string $id
+ * @param string $action
+ * @param string $content
+ * @param string $method (default: 'post')
+ * @param array $options (default: array())
+ * @return string
+ */
 function form_form($id, $action, $content, $method = 'post', $options = array()) {
 	$attributes = form_tag_attributes($id, $options);
 	$form .= "<form id=\"{$id}\" name=\"{$id}\" action=\"{$action}\" method=\"$method\"{$attributes}>\n";
@@ -20,12 +38,33 @@ function form_form($id, $action, $content, $method = 'post', $options = array())
 	return $form .'</form>';
 }
 
+/**
+ * form_input function.
+ * 
+ * @access public
+ * @param string $id
+ * @param string $type
+ * @param string $value (default: '')
+ * @param array $options (default: array())
+ * @return void
+ */
 function form_input($id, $type, $value = '', $options = array()) {
 	if ( !empty($value) ) { $options['value'] = $value; }
 	$attributes = form_tag_attributes($id, $options);
 	return "<input id=\"{$id}\" type=\"{$type}\"{$attributes} />";
 }
 
+/**
+ * form_select function.
+ * 
+ * @access public
+ * @param string $id
+ * @param string $select_title
+ * @param string $select_value
+ * @param array $select_options
+ * @param array $options (default: array())
+ * @return string
+ */
 function form_select($id, $select_title, $select_value, $select_options, $options = array()) {
 	$attributes = form_tag_attributes($id, $options);
 	$select = "<select id=\"{$id}\"{$attributes}>";
@@ -38,17 +77,41 @@ function form_select($id, $select_title, $select_value, $select_options, $option
 	return $select.'</select>';
 }
 
+/**
+ * form_textarea function.
+ * 
+ * @access public
+ * @param string $id
+ * @param string $text_value
+ * @param array $options (default: array())
+ * @return string
+ */
 function form_textarea($id, $text_value, $options = array()) {
 	$attributes = form_tag_attributes($id, $options);
 	return "<textarea id=\"{$id}\"{$attributes}>{$text_value}</textarea>";
 }
 
+/**
+ * form_html function.
+ * 
+ * @access public
+ * @param string $html
+ * @return string
+ */
 function form_html($html) {
 	return $html;
 }
 
 
 
+/**
+ * form_constructor function.
+ * 
+ * @access public
+ * @param array $form_array
+ * @param array $post
+ * @return string
+ */
 function form_constructor($form_array, $post) {
 	if ( $post['form-name'] !== $form_array['id'] ) { $post = array(); } // not our form not our business
 	$form = '';
@@ -90,6 +153,14 @@ function form_constructor($form_array, $post) {
 	return form_form($form_array['id'], $form_array['action'], $form);
 }
 
+/**
+ * form_process_post function.
+ * 
+ * @access public
+ * @param array $form
+ * @param array $post
+ * @return void
+ */
 function form_process_post($form, $post) {
 	if ( $post['form-name'] !== $form_array['id'] ) { return; } // not our form not our business
 
@@ -117,6 +188,13 @@ if no error pass to the save function
 */
 }
 
+/**
+ * page_template_list function.
+ * 
+ * @access public
+ * @param string $dir (default: '')
+ * @return array
+ */
 function page_template_list($dir = '') {
 	$templates = file_list('../'.PATH_TEMPLATES);
 	//print '<pre>'. print_r($templates, TRUE).'</pre>';

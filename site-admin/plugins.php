@@ -18,6 +18,14 @@ if ( array_key_exists('plugin', $_GET) && array_key_exists('enable', $_GET) ) {
 	plugins_set_status($path, $plugin_status);
 }
 
+/**
+ * plugins_display_page function.
+ * 
+ * @access public
+ * @param array $plugins_info
+ * @param array $plugin_status
+ * @return string
+ */
 function plugins_display_page($plugins_info, $plugin_status) {
 	$form = '<table>';
 	$update_status = FALSE;
@@ -64,6 +72,13 @@ echo metadata_link('stylesheet', 'text/css', 'style.css?t=E0LB').
 
 // echo plugins_display_form($_POST);
 
+/**
+ * plugins_list function.
+ * 
+ * @access public
+ * @param string $dir
+ * @return array
+ */
 function plugins_list($dir) {
 	$directory_contents = directory_list($dir);
 	if ( !$directory_contents ) { return FALSE; }
@@ -75,6 +90,13 @@ function plugins_list($dir) {
 	return $file_array;
 }
 
+/**
+ * plugins_get_info function.
+ * 
+ * @access public
+ * @param string $dir
+ * @return array
+ */
 function plugins_get_info($dir) {
 	$plugins = 	plugins_list($dir);
 	$plugins_info = array();

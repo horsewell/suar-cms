@@ -15,6 +15,13 @@ $pwd  = $_POST['password'];
 $action = array_key_exists('action', $_POST) ? $_POST['action'] : $_GET['action'];
 $display_users = TRUE;
 
+/**
+ * editForm function.
+ * 
+ * @access public
+ * @param string $user
+ * @return string
+ */
 function editForm($user) {
   $form = 'Please enter a new password for '. $user .':<br>';
   $form .= form_input('password', 'Text') .'<br>';
@@ -27,6 +34,12 @@ function editForm($user) {
 	return form_form('form-user-password-change', $_SERVER['PHP_SELF'], $form);
 }  
 
+/**
+ * addForm function.
+ * 
+ * @access public
+ * @return string
+ */
 function addForm() {
   $form = 'Please enter a new user and password:<br>';
   $form .= 'User: '. form_input('user', 'Text') .'<br>';
@@ -39,6 +52,13 @@ function addForm() {
 	return form_form('form-user-password-change', $_SERVER['PHP_SELF'], $form);
 }    
 
+/**
+ * users function.
+ * 
+ * @access public
+ * @param string $user
+ * @return string
+ */
 function users($user) {
     global $pass, $self;
     $users   = $pass->getUsers();
