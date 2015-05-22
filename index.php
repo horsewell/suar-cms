@@ -47,9 +47,11 @@ $page_array = array();
 
 $json = txt_load(PATH_CONTENT.clean_path($page_file) .'.json');
 $page_array = json_decode($json, TRUE);
-$page_array['page-body'] = html_entity_decode($page_content['page-body'], ENT_QUOTES);
+$page_array['page-body'] = token_filter(html_entity_decode($page_array['page-body'], ENT_QUOTES));
 //$page_array['page-body'] = token_filter($page_array['page-body']);
 
+
+//print '<div style="background-color: yellow;"><pre>'. print_r($page_array, TRUE) .'</pre></div>';
 print page_template(PATH_TEMPLATES.clean_path($page_array['page-template']), $page_array);
 
 ?>

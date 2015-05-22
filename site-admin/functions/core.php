@@ -159,14 +159,16 @@ function token_filter($page_content) {
 		$tokens = token_load(PATH_CONTENT.FILE_TOKEN);
 	}
 	
-	preg_match_all('/\[[a-zA-z0-9\-]+\]/', $page_content, $matches);
-	$matches = array_unique($matches[0]);
+	preg_match_all('/\[(?!template\:)[a-zA-z0-9\-]+\]/', $page_content, $matches);
 
 	//$page_content .= '<div style="background-color: yellow;"><pre>found tokens = '. print_r($matches, TRUE) .'</pre></div>';
 	//$page_content .= '<div style="background-color: gray;"><pre>$tokens = '. print_r($tokens, TRUE) .'</pre></div>';
+	$matches = array_unique($matches[0]);
 	
 	foreach($matches as $match) {
-		$page_content = str_replace($match, $tokens[trim($match, '[]')], $page_content);
+		if ( $match !== '[endif]' ) {
+			$page_content = str_replace($match, $tokens[trim($match, '[]')], $page_content);
+		}
 	}
 	
 	return $page_content;

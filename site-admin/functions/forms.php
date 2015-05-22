@@ -129,7 +129,7 @@ function form_html($html) {
  */
 function form_constructor($form_array) {
 	$post = array();
-	if ( $_POST['form-name'] === $form_array['id'] ) { $post = $_POST; } // if our form, our business
+	//if ( $_POST['form-name'] === $form_array['id'] ) { $post = $_POST; echo '<pre>'.print_r($_POST, TRUE).'</pre>'; } // if our form, our business
 	$form = '';
 	$input_types = array(
 		'text', 'password', 'submit', 'radio', 'checkbox',
@@ -143,7 +143,7 @@ function form_constructor($form_array) {
 		
 		$value = $options['value'];
 		if (!in_array($type, array('submit','button'))) {
-			$value = array_key_exists($options['attributes']['name'], $post) ? $post[$options['attributes']['name']] : $value;
+			$value = !empty($post[$options['attributes']['name']]) ? $post[$options['attributes']['name']] : $value;
 			$value = empty($value) ? $options['default_value'] : $value;
 		}
 		if ( in_array($type, $input_types) ) {
@@ -202,21 +202,4 @@ if no error pass to the save function
 // http://php.net/manual/en/function.htmlspecialchars.php
 
 */
-}
-
-/**
- * page_template_list function.
- * 
- * @access public
- * @param string $dir (default: '')
- * @return array
- */
-function page_template_list($dir = '') {
-	$templates = file_list(PATH_TEMPLATES);
-	//print '<pre>'. print_r($templates, TRUE).'</pre>';
-	$template_options = array('- Select a template -' => '');
-	foreach($templates as $template) {
-		$template_options[substr($template, 0, -5)] = $template;
-	}
-	return $template_options;
 }

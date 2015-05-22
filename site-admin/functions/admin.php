@@ -8,21 +8,18 @@
  */
 function admin_menu() {
 	
-	$file = clean_path($_POST["page-file"]);
-	
-	$menu_start = '<nav><ul id="nav-main"><li>';
-	$menu_finish = '</li><li><a href="plugins.php">Plugins</a> | </li><li><a href="tokens.php">Tokens</a> | </li><li><a href="user.php">Users</a></li></ul></nav>';
+	$menu  = '<nav><ul id="nav-main"><li><a href="plugins.php">Plugins</a> | ';
+	$menu .= '</li><li><a href="tokens.php">Tokens</a> | ';
+	$menu .= '</li><li><a href="user.php">Users</a></li></ul></nav>';
 
-	$FL=file_list(PATH_CONTENT);
-	$file_form_options = array();
-	foreach( $FL as $value ) {
-		$file_form_options[substr($value, 0, -5)] = $value;
-	}
-	
-	$file_form  = form_label('page-file', 'Select a file to edit:').' ';
-	$file_form .= form_select('page-file', '- Select a File -', $file, $file_form_options, array('class' => 'select-file'));
-	$file_form .= ' '.form_input('button-load', 'submit', 'Load', array('name' => 'submit')) .' | ';
+	return $menu;
+}
 
-	return $menu_start . form_form('form-file', $_SERVER['PHP_SELF'], $file_form) . $menu_finish;
-	
+function ckeditor_includes($ckeditor_path, $files_version) {
+	return metadata_link('stylesheet', 'text/css', $ckeditor_path.'skins/moono/editor.css?t='.$files_version).
+	metadata_link('stylesheet', 'text/css', $ckeditor_path.'plugins/uicolor/yui/assets/yui.css?t='.$files_version).
+	metadata_script($ckeditor_path.'ckeditor.js').'<style>.cke{visibility:hidden;}</style>'.
+	metadata_script($ckeditor_path.'lang/en.js?t='.$files_version).
+	metadata_script($ckeditor_path.'styles.js?t='.$files_version).
+	metadata_script($ckeditor_path.'plugins/uicolor/yui/yui.js?t='.$files_version);
 }
