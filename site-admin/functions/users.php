@@ -16,7 +16,7 @@ function editForm($user) {
   $form .= form_input('submit', 'Submit', 'Save');
   $form .= ' '. form_input('cancel', 'Submit', 'Cancel');
   
-	return form_form('form-user-password-change', $_SERVER['PHP_SELF'], $form);
+	return form_form('form-user-password-change', $_SERVER['PHP_SELF'] .'?page=users', $form);
 }  
 
 /**
@@ -34,7 +34,7 @@ function addForm() {
   $form .= form_input('submit', 'Submit', 'Add');
   $form .= ' '. form_input('cancel', 'Submit', 'Cancel');
   
-	return form_form('form-user-password-change', $_SERVER['PHP_SELF'], $form);
+	return form_form('form-user-password-change', $_SERVER['PHP_SELF'] .'?page=users', $form);
 }    
 
 /**
@@ -74,6 +74,7 @@ function display_users_form($user) {
  * @return void
  */
 function users_form_submit($action, &$user, $pwd, &$display_users) {
+	global $pass;
 	if(empty($_POST['cancel']) && isset($action)) {
 		switch($action) {
 			case 'change':

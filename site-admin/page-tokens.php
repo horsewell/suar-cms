@@ -1,11 +1,4 @@
 <?php
-include('../_libraries/class.PasswdAuth.inc');
-$pass = new PasswdAuth(realpath(getcwd()));
-$pass->check();
-
-include_once('config.php');
-include_once('functions/forms.php');
-include_once('functions/core.php');
 
 $tokens = token_load(PATH_CONTENT.FILE_TOKEN);
 
@@ -37,14 +30,13 @@ if ( $_POST['action'] === "doAction" ) {
 
 
 /**
- * token_display_form function.
+ * display_page function.
  * 
  * @access public
- * @param array $post_values
- * @param array $tokens
  * @return string
  */
-function token_display_form($post_values, $tokens) {
+function display_page_content() {
+	$tokens = token_load(PATH_CONTENT.FILE_TOKEN);
 
 	$form = '<table>';
 	
@@ -76,29 +68,5 @@ function token_display_form($post_values, $tokens) {
   $form .= form_input('action', 'Hidden', 'doAction');
   $form .= form_input('submit', 'Submit', 'Save');
   
-	return form_form('token-form', $_SERVER['PHP_SELF'], $form);
+	return form_form('token-form', $_SERVER['PHP_SELF'].'?page=tokens', $form);
 }
-
-?><!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Token Administration</title>
-<?php
-echo metadata_link('stylesheet', 'text/css', 'style.css?t=E0LB').
-     metadata_script('js/domready.js').metadata_script('js/script.js');
-?>
-</head>
-
-<body class="user-admin">
-	<header>
-		<h1>Token Administration</h1>
-	</header>
-<section><div class="main"><?php
-
-echo token_display_form($_POST, $tokens);
-
-?></div></section>
-	<nav><p><a href="./">≪ back to the content administration</a></p></nav>
-	</body>
-</html>

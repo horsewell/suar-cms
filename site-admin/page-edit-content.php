@@ -42,14 +42,15 @@ function admin_form_page_post($form) {
 		case 'Restore':
 			$json = txt_load(PATH_BACKUP.$form['page-file']['value']);
 			$page_content = json_decode($json, TRUE);
-			$page_content['page-body'] = html_entity_decode($page_content['page-body'], ENT_QUOTES);
-			foreach($page_content as $key => $value) {
-				$_POST[$key] = $value;
-			}
 			break;
 	}
 	
-	return TRUE; //'<div style="background-color: gray;"><pre>'. print_r($GLOBALS['BPATH'].$file, TRUE) .'</pre></div>';
+	$page_content['page-body'] = html_entity_decode($page_content['page-body'], ENT_QUOTES);
+	foreach($page_content as $key => $value) {
+		$_POST[$key] = $value;
+	}
+	
+	return $page_content; //'<div style="background-color: gray;"><pre>'. print_r($GLOBALS['BPATH'].$file, TRUE) .'</pre></div>';
 }
 
 /**
@@ -74,20 +75,22 @@ function admin_page_form_pagelist() {
  * @return string
  */
 function display_page_content() {
-	
-	if($_POST['page-file'] && $_POST['submit']=='Load') {
-		$json = txt_load(PATH_CONTENT.clean_path($_POST['page-file']));
-		$page_content = json_decode($json, TRUE);
-		$page_content['page-body'] = html_entity_decode($page_content['page-body'], ENT_QUOTES);
-		//echo '<div>loading file: '.$page_content['page-body'].'</div>';
-	}
 
+	// handle redirect too
+	
 	$nofile = array();
 	if ( empty($_POST['page-file']) ) {
 		$nofile['disabled'] = 'disabled';
 		$nofile['title'] = 'No file has been selected';
 	}
 
+	if($_POST['page-file'] && $_POST['submit'] === 'Load') {
+		$json = txt_load(PATH_CONTENT.clean_path($_POST['page-file']));
+		$page_content = json_decode($json, TRUE);
+		$page_content['page-body'] = html_entity_decode($page_content['page-body'], ENT_QUOTES);
+		//echo '<div>loading file: '.$page_content['page-body'].'</div>';
+	}
+	
 	$page_metadata = array(
 	
 		'page-file' => array(
@@ -134,7 +137,7 @@ function display_page_content() {
 		),
 		'page-html-2' => array(
 			'type' => 'html',
-			'html' => !empty($file) ? '' : '<h2> Please select a file to edit.</h2>',
+			'html' => !empty($_POST['page-file']) ? '' : '<h2> Please select a file to edit.</h2>',
 		),
 		'page-body' => array(
 			'title' => 'Body',
@@ -188,7 +191,21 @@ function display_page_content() {
 		'post_call' => 'admin_form_page_post'
 	);
 	
-	call_user_func($page_metadata['post_call'], $page_metadata);
+	
+	$page_content = call_user_func($page_metadata['post_call'], $page_metadata);
 	//$output = '<pre>'.print_r($page_metadata, TRUE).'</pre>';
+	if ( !empty($page_content) ) {
+		foreach($page_content as $key => $value) {
+			$page_metadata[$key]['value'] = $value;
+		}
+	}
+	
+	if ( !file_exists(PATH_BACKUP.$page_metadata['page-file']['value'])) {
+		$page_metadata['button-restore']['attributes'] = array_merge($page_metadata['button-restore']['attributes'], array(
+			'disabled' => 'disabled',
+			'title' => 'No backup to restore',
+		));
+	}
+
 	return $output.form_constructor($page_metadata);
 }

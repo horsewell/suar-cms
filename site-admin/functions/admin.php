@@ -8,9 +8,12 @@
  */
 function admin_menu() {
 	
-	$menu  = '<nav><ul id="nav-main"><li><a href="plugins.php">Plugins</a> | ';
-	$menu .= '</li><li><a href="tokens.php">Tokens</a> | ';
-	$menu .= '</li><li><a href="user.php">Users</a></li></ul></nav>';
+	$menu  = '<nav><ul id="nav-main">';
+	$menu .='<li><a href="./">Content</a> | </li>';
+	$menu .='<li><a href="./?page=plugins">Plugins</a> | </li>';
+	$menu .= '<li><a href="./?page=tokens">Tokens</a> | </li>';
+	$menu .= '<li><a href="./?page=users">Users</a></li>';
+	$menu .= '</ul></nav>' ."\n";
 
 	return $menu;
 }
