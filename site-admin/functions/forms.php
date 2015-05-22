@@ -91,6 +91,21 @@ function form_textarea($id, $text_value, $options = array()) {
 	return "<textarea id=\"{$id}\"{$attributes}>{$text_value}</textarea>";
 }
 
+
+/**
+ * form_label function.
+ * 
+ * @access public
+ * @param string $for
+ * @param string $title
+ * @param array $options (default: array())
+ * @return string
+ */
+function form_label($for, $title, $options = array()) {
+	$attributes = form_tag_attributes($id, $options);
+	return '<label id="'.$for.'-label" for="'.$for.'"'.$attributes.'>'.$title.'</label>';
+}
+
 /**
  * form_html function.
  * 
@@ -112,8 +127,9 @@ function form_html($html) {
  * @param array $post
  * @return string
  */
-function form_constructor($form_array, $post) {
-	if ( $post['form-name'] !== $form_array['id'] ) { $post = array(); } // not our form not our business
+function form_constructor($form_array) {
+	$post = array();
+	if ( $_POST['form-name'] === $form_array['id'] ) { $post = $_POST; } // if our form, our business
 	$form = '';
 	$input_types = array(
 		'text', 'password', 'submit', 'radio', 'checkbox',
@@ -135,16 +151,16 @@ function form_constructor($form_array, $post) {
 			if ( empty($options['title']) ) {
 				$form .= $input_item;
 			} else {
-				$form .= '<div><label for="'.$id.'">'.$options['title'].'</label> '.$input_item.'</div>';
+				$form .= '<div>'.form_label($id, $options['title']).' '.$input_item.'</div>';
 			}
 		} else if ( $type == 'textarea' ) {
-			$form .= '<div><label for="'.$id.'">'.$options['title'].'</label><br/>';
+			$form .= '<div>'.form_label($id, $options['title']).'</label><br/>';
 			$form .= form_textarea($id, $value, $options['attributes']) .'</div>';
 		} else if ( $type == 'select' ) {
 			if ( is_string($options['select-options']) ) {
 				$options['select-options'] = call_user_func($options['select-options'], $value);
 			}
-			$form .= '<div><label for="'.$id.'">'.$options['title'].'</label>';
+			$form .= '<div>'.form_label($id, $options['title']).' ';
 			$form .= form_select($id, '', $value, $options['select-options'], $options['attributes']) .'</div>';
 		} else if ( $type == 'html' || empty($type) ) {
 			$form .= form_html($options['html']);
@@ -196,7 +212,7 @@ if no error pass to the save function
  * @return array
  */
 function page_template_list($dir = '') {
-	$templates = file_list('../'.PATH_TEMPLATES);
+	$templates = file_list(PATH_TEMPLATES);
 	//print '<pre>'. print_r($templates, TRUE).'</pre>';
 	$template_options = array('- Select a template -' => '');
 	foreach($templates as $template) {

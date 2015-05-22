@@ -1,7 +1,8 @@
 <?php
 
 /**
- *  Basic functionality  
+ * Core functionality
+ *
  */
  
 
@@ -17,7 +18,7 @@ function directory_list($dir) {
 		$fd = @opendir($dir);
 		while (($part = @readdir($fd)) == true) {
 			clearstatcache();
-			if ($part[0] != "." && $part[0] != "_") { // hidden to CMS
+			if ($part[0] != "." && $part[0] != "_") { // hidden ("_", ".") to CMS
 				$file_array[] = $part;
 			}
 		}

@@ -5,18 +5,16 @@ $pass = new PasswdAuth(realpath(getcwd()));
 $pass->check();
 
 include_once('config.php');
-include_once('functions-forms.php');
-include_once('functions-plugins.php');
-include_once('functions.php');
+include_once('functions/forms.php');
+include_once('functions/plugins.php');
+include_once('functions/core.php');
 
-$path = '../'.PATH_MODULES;
-
-$plugins_info  = plugins_get_info($path);
-$plugin_status = plugins_get_status($path);
+$plugins_info  = plugins_get_info(PATH_MODULES);
+$plugin_status = plugins_get_status(PATH_MODULES);
 
 if ( array_key_exists('plugin', $_GET) && array_key_exists('enable', $_GET) ) {
 	$plugin_status[$_GET['plugin']] = $_GET['enable'] == 1 ? TRUE : FALSE;
-	plugins_set_status($path, $plugin_status);
+	plugins_set_status(PATH_MODULES, $plugin_status);
 }
 
 ?><!DOCTYPE html>

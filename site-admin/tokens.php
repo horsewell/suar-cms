@@ -4,12 +4,10 @@ $pass = new PasswdAuth(realpath(getcwd()));
 $pass->check();
 
 include_once('config.php');
-include_once('functions-forms.php');
-include_once('functions.php');
+include_once('functions/forms.php');
+include_once('functions/core.php');
 
-$CPATH = '../'.PATH_CONTENT;
-
-$tokens = token_load($CPATH.FILE_TOKEN);
+$tokens = token_load(PATH_CONTENT.FILE_TOKEN);
 
 // remove
 if ( $_POST['action'] === "doAction" ) {
@@ -33,7 +31,7 @@ if ( $_POST['action'] === "doAction" ) {
 			}
 			// TODO: if the token name has "this-" at the start then display a message
 		}
-		token_save($CPATH.FILE_TOKEN, $tokens);
+		token_save(PATH_CONTENT.FILE_TOKEN, $tokens);
 	}
 }
 

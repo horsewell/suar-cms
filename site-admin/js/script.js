@@ -11,8 +11,10 @@ var bindEvent = function(element, type, handler) {
     } else {
         element.attachEvent('on'+type, handler);
     }
-}
+};
 
 function confirm_delete(e) {
 	if ( !confirm("Do you really want to delete the user?") ) { e.preventDefault(); }
 }
+
+// after add name if path is not set then add path automatically
